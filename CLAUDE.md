@@ -16,7 +16,7 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 - You can read and suggest changes anywhere, but **only edit outside your area through a PR the owner approves**.
 - **Shared area:** `src/contracts/`, the API shapes. Changing it needs **both** approvals (see §5).
-- `CODEOWNERS` enforces this on GitHub (§9).
+- `CODEOWNERS` records this (§9); GitHub doesn't enforce it, since `main` takes direct pushes.
 
 ---
 
@@ -176,10 +176,10 @@ Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyw
 
 ## 9. Git and GitHub workflow
 
-- **Branches:** `main` is production (protected, deploys to Vercel). Work on `front/<thing>` or `back/<thing>` (e.g. `front/product-page`, `back/checkout-api`).
+- **Branches:** `main` is production (deploys to Vercel). Both of us can push to it directly; force pushes and deleting `main` are blocked. Work on `front/<thing>` or `back/<thing>` (e.g. `front/product-page`, `back/checkout-api`).
 - **Commits:** Conventional Commits: `feat(shop): …`, `fix(api): …`, `chore: …`, `docs(claude): …`.
-- **PRs:** small, one feature each, with a short description, a screenshot for UI changes, and any `CLAUDE.md` updates. The other person reviews contract changes; everything else can be merged by its owner after the checks pass.
-- **Checks on every PR (GitHub Actions):** `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Vercel posts a preview link.
+- **PRs:** small, one feature each, with a short description, a screenshot for UI changes, and any `CLAUDE.md` updates. The other person reviews contract changes; everything else can be merged by its owner after the checks pass. PRs are the normal path; direct pushes to `main` are for small fixes and docs.
+- **Checks on every PR and every push to `main` (GitHub Actions, not blocking):** `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Vercel posts a preview link.
 - **`.github/CODEOWNERS`:**
   ```
   /src/app/            @sharaf-naai
@@ -229,6 +229,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Decision | Who |
 |---|---|---|
+| 2026-11-20 | `main` allows direct pushes from both of us; no required PR, review or CI (force push/delete still blocked) | both |
 | 2026-11-20 | English only: dropped FR/AR and next-intl; pages live directly under `src/app/` | Sharaf |
 | 2026-11-20 | Admin lives at `/admin`; public demo login `test` / `test` with a DEMO role and a nightly reset | both |
 | 2026-11-20 | One Next.js repo; frontend talks to backend only through `/api` + `src/contracts` | both |
@@ -239,6 +240,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | — |
 | 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | — |
 | 2026-11-20 | chore | Vercel project linked to GitHub (preview per PR, `main` = production); `NEXT_PUBLIC_USE_MOCKS=true` set | — |
 | 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, design tokens), CI workflow, .env.example; `main` protected (PR + code-owner review + CI) | — |
