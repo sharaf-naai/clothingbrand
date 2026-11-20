@@ -126,7 +126,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 |---|---|---|---|
 | GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`); contract `src/contracts/products.ts` | 🧪 |
 | GET | `/api/products/:slug` | product detail + variants + stock; 404 if not found | 🧪 |
-| GET | `/api/drops/current` | current/next drop | ⬜ |
+| GET | `/api/drops/current` | `{ current, next }` drop (live / soonest upcoming); contract `src/contracts/drops.ts` | 🧪 |
 | POST | `/api/cart/validate` | re-price cart, check stock | ⬜ |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
 | POST | `/api/checkout` | create order (COD) or Stripe session (CARD) | ⬜ |
@@ -292,6 +292,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Drops page `/drops`: big drop number, the drop's pieces, next-drop teaser; drops contract + mock + tests; `formatDate()` | — |
 | 2026-11-20 | feat(shop) | Woman / Man listing pages (category + sort links, paging, sold-out state), `formatMoney`; header gets an in-flow mode with the logo; `agentRules: false` | — |
 | 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |
 | 2026-11-20 | feat(shop) | Home hero H1 · Cover (wordmark, model cut-out, header, motion); hero spec added as §8.1; images in `public/assets/` | — |
