@@ -1,6 +1,5 @@
-/src/app/[locale]/   @sharaf-naai
+/src/app/            @sharaf-naai
 /src/components/     @sharaf-naai
-/messages/           @sharaf-naai
 /prisma/             @Zidane-Nait-cheikh
 /src/server/         @Zidane-Nait-cheikh
 /src/app/api/        @Zidane-Nait-cheikh

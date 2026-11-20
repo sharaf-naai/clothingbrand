@@ -11,7 +11,7 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 | Who | Role | Owns |
 |---|---|---|
-| **Sharaf** | Frontend | Storefront UI, admin UI, design system, animations, translations |
+| **Sharaf** | Frontend | Storefront UI, admin UI, design system, animations |
 | **Zidane** | Backend | Database, API, auth, payments, emails/WhatsApp, admin permissions, seed data, deployment config |
 
 - You can read and suggest changes anywhere, but **only edit outside your area through a PR the owner approves**.
@@ -26,7 +26,7 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 - Home (editorial hero, design picked from the canvas), Woman / Man / Drops listing pages, product page, search.
 - Cart drawer, checkout with **cash on delivery** or **card (Stripe test mode)**, order confirmation.
 - Customer account (orders, addresses), wishlist.
-- Languages: EN (default), FR, AR (right to left).
+- Language: English only.
 
 **Admin dashboard** at **`/admin`**
 - Overview: sales, orders today, best sellers, low stock.
@@ -44,7 +44,7 @@ Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs (hero
 ## 3. Stack (agreed defaults)
 
 - **Next.js** (App Router, TypeScript strict), one app for the storefront, `/admin` and `/api`.
-- **Tailwind CSS**. **next-intl** for EN/FR/AR.
+- **Tailwind CSS**.
 - **PostgreSQL** (Neon or Supabase) + **Prisma** ORM.
 - **Auth.js** (credentials) for admin; customer accounts by email magic link.
 - **Zod** for every API input and output (`src/contracts`).
@@ -63,23 +63,21 @@ Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs (hero
 ├─ CLAUDE.md                 ← this file (both)
 ├─ .github/CODEOWNERS        (both)
 ├─ .env.example              (backend; frontend adds NEXT_PUBLIC_* vars)
-├─ messages/{en,fr,ar}.json  (frontend)
 ├─ prisma/
 │  ├─ schema.prisma          (backend)
 │  └─ seed.ts                (backend) demo data, also used by the nightly reset
 ├─ public/                   (frontend) static images, fonts, icons
 └─ src/
    ├─ app/
-   │  ├─ [locale]/(shop)/…   (frontend) storefront pages
-   │  ├─ [locale]/admin/…    (frontend) admin UI pages
+   │  ├─ (shop)/…            (frontend) storefront pages
+   │  ├─ admin/…             (frontend) admin UI pages
    │  └─ api/…               (backend) route handlers
    ├─ components/            (frontend) ui/, shop/, admin/
    ├─ contracts/             (SHARED) zod schemas + inferred types, one file per resource
    ├─ lib/api/               (frontend) typed fetch functions that call /api, switch to mocks
-   ├─ i18n/                  (frontend) next-intl routing + request config
    ├─ mocks/                 (frontend) fixtures typed with the contracts
    ├─ server/                (backend) db client, services, auth, payments, notifications
-   └─ proxy.ts               (Next 16 name for middleware.ts; backend: auth guard for /admin; frontend: next-intl locale) — edit together
+   └─ proxy.ts               (backend, not created yet) Next 16 name for middleware.ts: auth guard for /admin
 ```
 
 Rules:
@@ -101,7 +99,6 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 **Conventions:**
 - JSON only. Money as **integer minor units** + currency code: `{ "amount": 4900, "currency": "EUR" }`. Never floats.
 - Dates as ISO 8601 strings (UTC).
-- Translatable fields as `{ "en": "", "fr": "", "ar": "" }`; the API returns the requested locale when `?locale=` is passed.
 - Lists: `{ items: [...], page, pageSize, total }`. Query: `page`, `pageSize` (max 50), `sort`.
 - Errors: HTTP status + `{ "error": { "code": "OUT_OF_STOCK", "message": "…", "fields": { … } } }`. Codes are UPPER_SNAKE and listed in `src/contracts/errors.ts`.
 - Admin endpoints require a session; the DEMO role gets `403 DEMO_FORBIDDEN` on blocked actions (§7).
@@ -134,10 +131,10 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 
 ## 6. Data model (backend owns `schema.prisma`; summary for both)
 
-- **Product**: id, slug, name (i18n), description (i18n), section `WOMAN | MAN | UNISEX`, categoryId, dropId?, basePrice (minor units), currency, status `DRAFT | PUBLISHED | ARCHIVED`, images[], createdAt.
+- **Product**: id, slug, name, description, section `WOMAN | MAN | UNISEX`, categoryId, dropId?, basePrice (minor units), currency, status `DRAFT | PUBLISHED | ARCHIVED`, images[], createdAt.
 - **Variant**: id, productId, size (`XS…XXL`, or `ONE`), color (name + hex), sku, stock, priceOverride?.
-- **Category**: id, slug, name (i18n). Starters: outerwear, tops, bottoms, accessories.
-- **Drop**: id, number (01, 02…), name (i18n), releaseAt, status `UPCOMING | LIVE | ENDED`.
+- **Category**: id, slug, name. Starters: outerwear, tops, bottoms, accessories.
+- **Drop**: id, number (01, 02…), name, releaseAt, status `UPCOMING | LIVE | ENDED`.
 - **Customer**: id, email, name, phone, addresses[].
 - **Order**: id, number (e.g. `VY-000123`), customerId?, guest email/phone, items[], subtotal, discount, shipping, total, currency, paymentMethod `COD | CARD`, paymentStatus `PENDING | PAID | REFUNDED`, status `NEW | CONFIRMED | SHIPPED | DELIVERED | CANCELLED | RETURNED`, statusHistory[], createdAt.
 - **OrderItem**: variantId, name/size/colour snapshot, unitPrice, qty.
@@ -171,10 +168,9 @@ Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyw
 - **Fonts:**
   - Bodoni Moda for headlines.
   - Geist for UI and body.
-  - Arabic: pick a high-contrast Arabic display font + a clean Arabic sans when the AR version starts (record the choice in §12).
 - **Buttons:** an underlined text link with an arrow, or a flat ink block. No rounded pills, gradients or emoji.
 - **Photos:** generated with a consistent setup (backdrop matching the page colour, light from the left, no text or logos). The prompts are on the canvas.
-- Accessibility: real buttons and links, 44px targets, 4.5:1 text contrast, keyboard navigation, RTL for Arabic.
+- Accessibility: real buttons and links, 44px targets, 4.5:1 text contrast, keyboard navigation.
 
 ---
 
@@ -186,9 +182,8 @@ Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyw
 - **Checks on every PR (GitHub Actions):** `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Vercel posts a preview link.
 - **`.github/CODEOWNERS`:**
   ```
-  /src/app/[locale]/   @sharaf-naai
+  /src/app/            @sharaf-naai
   /src/components/     @sharaf-naai
-  /messages/           @sharaf-naai
   /prisma/             @Zidane-Nait-cheikh
   /src/server/         @Zidane-Nait-cheikh
   /src/app/api/        @Zidane-Nait-cheikh
@@ -234,6 +229,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Decision | Who |
 |---|---|---|
+| 2026-11-20 | English only: dropped FR/AR and next-intl; pages live directly under `src/app/` | Sharaf |
 | 2026-11-20 | Admin lives at `/admin`; public demo login `test` / `test` with a DEMO role and a nightly reset | both |
 | 2026-11-20 | One Next.js repo; frontend talks to backend only through `/api` + `src/contracts` | both |
 | 2026-11-20 | Neutral minimal brand (no cultural references), working name VEYL | Sharaf |
@@ -243,8 +239,9 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | — |
 | 2026-11-20 | chore | Vercel project linked to GitHub (preview per PR, `main` = production); `NEXT_PUBLIC_USE_MOCKS=true` set | — |
-| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, next-intl EN/FR/AR, design tokens), CI workflow, .env.example; `main` protected (PR + code-owner review + CI) | — |
+| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, design tokens), CI workflow, .env.example; `main` protected (PR + code-owner review + CI) | — |
 | 2026-11-20 | chore | Added .gitattributes (LF) and .github/CODEOWNERS; filled in names | — |
 | 2026-11-20 | docs | Project brief created | — |
 
