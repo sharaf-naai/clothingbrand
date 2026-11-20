@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Design tokens from CLAUDE.md §8 */
+@theme {
+  --color-ivory: #f4f1ec;
+  --color-stone: #d9d3c9;
+  --color-ink: #111111;
+  --color-grey: #6b665f;
+  --color-burgundy: #6e1e2b;
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-serif: var(--font-bodoni), Georgia, serif;
+}
+
+body {
+  @apply bg-ivory text-ink font-sans;
+}
