@@ -243,7 +243,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
-| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, next-intl EN/FR/AR, design tokens), CI workflow, .env.example, Vercel setup | — |
+| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, next-intl EN/FR/AR, design tokens), CI workflow, .env.example; `main` protected (PR + code-owner review + CI) | — |
 | 2026-11-20 | chore | Added .gitattributes (LF) and .github/CODEOWNERS; filled in names | — |
 | 2026-11-20 | docs | Project brief created | — |
 
