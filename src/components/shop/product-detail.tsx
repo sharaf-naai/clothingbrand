@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/api/products";
 import { formatMoney } from "@/lib/format";
 import { selectVariant } from "@/lib/variants";
+import { AddToBagButton } from "./bag-buttons";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -24,7 +25,6 @@ export async function ProductDetail({ params, searchParams }: Props) {
   const soldOut = sizes.every((s) => s.stock === 0);
   const showSizes = !(sizes.length === 1 && sizes[0].size === "ONE");
 
-  // shortcut: "Add to bag" does nothing yet, wire it to the cart once the cart contract and drawer exist
   const cta = soldOut
     ? "Sold out"
     : !variant
@@ -125,13 +125,23 @@ export async function ProductDetail({ params, searchParams }: Props) {
           </div>
         )}
 
-        <button
-          type="button"
-          disabled={!variant || variant.stock === 0}
-          className="mt-8 flex min-h-12 w-full items-center justify-center bg-ink text-xs uppercase tracking-[.14em] text-ivory disabled:bg-stone disabled:text-grey"
-        >
-          {cta}
-        </button>
+        <AddToBagButton
+          label={cta}
+          line={
+            variant && variant.stock > 0
+              ? {
+                  variantId: variant.id,
+                  slug: p.slug,
+                  name: p.name,
+                  color: color.name,
+                  size: variant.size,
+                  price: variant.price,
+                  image: p.images[0],
+                  maxQty: variant.stock,
+                }
+              : undefined
+          }
+        />
         {variant && variant.stock > 0 && variant.stock <= 3 && (
           <p className="mt-3 text-xs text-grey">Only {variant.stock} left</p>
         )}
