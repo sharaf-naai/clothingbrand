@@ -9,6 +9,21 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 _Last updated 2026-11-20 by Sharaf._
 
+**Open PRs: merge in this order** (each one is stacked on the one before it)
+
+| # | PR | Who approves | Base |
+|---|---|---|---|
+| 1 | [#2](https://github.com/sharaf-naai/clothingbrand/pull/2) Products contract | **both** (shared `src/contracts`) | `main` |
+| 2 | [#3](https://github.com/sharaf-naai/clothingbrand/pull/3) Cart validate contract + error body | **both** | #2 |
+| 3 | [#4](https://github.com/sharaf-naai/clothingbrand/pull/4) Woman / Man listing pages | Sharaf | #2 |
+| 4 | [#5](https://github.com/sharaf-naai/clothingbrand/pull/5) Product page | Sharaf | #4 |
+| 5 | [#6](https://github.com/sharaf-naai/clothingbrand/pull/6) Cart drawer + Add to bag + stock re-check | Sharaf | #5 |
+
+- Merge with **Delete branch** on (`gh pr merge <n> --merge --delete-branch`): GitHub then retargets the next PR to `main` by itself.
+- #6 also shows #3's commit (it was merged into the cart branch) until #3 is in.
+- If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first.
+- Zidane: #2 and #3 each end with a few questions in the description; answer them before approving.
+
 **Changed today (read this, Zidane):**
 - **English only.** FR/AR and next-intl are gone. No `[locale]` in routes (pages live in `src/app/`), no `messages/`, and API text fields are plain strings, not `{ en, fr, ar }`.
 - **`main` takes direct pushes** from both of us (no required PR, review or CI). Force pushes and deleting `main` are still blocked. CI still runs on every push, so check it went green.
