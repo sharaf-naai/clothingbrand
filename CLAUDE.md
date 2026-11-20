@@ -18,7 +18,8 @@ _Last updated 2026-11-20 by Sharaf._
 
 **Next up:**
 - **Zidane:** accept the GitHub invite, clone, `pnpm install`. Then Prisma schema + `db:*` scripts + seed (§6, §11), and `GET /api/drops/current` (the hero uses a hardcoded "Drop 01 · Autumn" until it exists).
-- **Sharaf:** first contract `src/contracts/products.ts` + mocks (needs both approvals; adds Zod), then the listing and product pages.
+- **Zidane:** review the products contract PR (`front/products-contract`), then implement `/api/products` and `/api/products/:slug` validating output with `ProductList` / `Product`.
+- **Sharaf:** listing and product pages on mocks (`listProducts`, `getProduct` in `src/lib/api/products.ts`).
 
 ---
 
@@ -114,7 +115,8 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 **Conventions:**
 - JSON only. Money as **integer minor units** + currency code: `{ "amount": 4900, "currency": "EUR" }`. Never floats.
 - Dates as ISO 8601 strings (UTC).
-- Lists: `{ items: [...], page, pageSize, total }`. Query: `page`, `pageSize` (max 50), `sort`.
+- Lists: `{ items: [...], page, pageSize, total }`. Query: `page`, `pageSize` (max 50), `sort`. Shared pieces (`Money`, `PageQuery`, `listOf`) are in `src/contracts/common.ts`.
+- Inside `src/contracts` and `src/mocks`, relative imports keep the `.ts` extension (`./common.ts`) so `node --test` can load them without a build step. Tests are `*.test.ts` files next to the code.
 - Errors: HTTP status + `{ "error": { "code": "OUT_OF_STOCK", "message": "…", "fields": { … } } }`. Codes are UPPER_SNAKE and listed in `src/contracts/errors.ts`.
 - Admin endpoints require a session; the DEMO role gets `403 DEMO_FORBIDDEN` on blocked actions (§7).
 
@@ -122,8 +124,8 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 
 | Method | Path | Purpose | Status |
 |---|---|---|---|
-| GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`) | ⬜ |
-| GET | `/api/products/:slug` | product detail + variants + stock | ⬜ |
+| GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`); contract `src/contracts/products.ts` | 🧪 |
+| GET | `/api/products/:slug` | product detail + variants + stock; 404 if not found | 🧪 |
 | GET | `/api/drops/current` | current/next drop | ⬜ |
 | POST | `/api/cart/validate` | re-price cart, check stock | ⬜ |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
@@ -290,6 +292,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |
 | 2026-11-20 | feat(shop) | Home hero H1 · Cover (wordmark, model cut-out, header, motion); hero spec added as §8.1; images in `public/assets/` | — |
 | 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | — |
 | 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | — |
