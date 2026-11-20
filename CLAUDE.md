@@ -235,7 +235,7 @@ Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyw
   - Bodoni Moda for headlines.
   - Geist for UI and body.
 - **Buttons:** an underlined text link with an arrow, or a flat ink block. No rounded pills, gradients or emoji.
-- **Photos:** generated with a consistent setup (backdrop matching the page colour, light from the left, no text or logos). The prompts are on the canvas.
+- **Photos:** generated with a consistent setup (backdrop matching the page colour, light from the left, no text or logos). Hero prompt: canvas + §8.1. Product prompts and how to deliver them: `docs/photo-prompts.md`.
 - Accessibility: real buttons and links, 44px targets, 4.5:1 text contrast, keyboard navigation.
 
 ### 8.1 Home hero: "H1 · Cover" (chosen)
