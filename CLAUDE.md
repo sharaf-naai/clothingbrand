@@ -40,7 +40,7 @@ _Last updated 2026-11-20 by Sharaf._
 
 **Storefront** (public)
 - Home (editorial hero **H1 · Cover**, see §8.1), Woman / Man / Drops listing pages, product page, search.
-- Cart drawer, checkout with **cash on delivery** or **card (Stripe test mode)**, order confirmation.
+- Cart drawer + `/cart` page, checkout with **cash on delivery**, **card** or **PayPal**, all **simulated** (no real payment provider), order confirmation.
 - Customer account (orders, addresses), wishlist.
 - Language: English only.
 
@@ -64,7 +64,7 @@ Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs. The 
 - **PostgreSQL** (Neon or Supabase) + **Prisma** ORM.
 - **Auth.js** (credentials) for admin; customer accounts by email magic link.
 - **Zod** for every API input and output (`src/contracts`).
-- **Stripe** test mode for cards. **Resend** for emails. WhatsApp: `wa.me` links first, WhatsApp Cloud API later.
+- **Payments are simulated** (decision §12): a demo card form that only accepts test numbers and never sends the number (only the last 4 digits), a simulated PayPal approval, and cash on delivery. No Stripe. **Resend** for emails. WhatsApp: `wa.me` links first, WhatsApp Cloud API later.
 - Images: **Cloudinary** (or UploadThing). Hosting: **Vercel** (production https://clothingbrand-two.vercel.app), with a preview deployment for every PR.
 - Package manager: **pnpm**. Node **20+**.
 
@@ -129,7 +129,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 | GET | `/api/drops/current` | current/next drop | ⬜ |
 | POST | `/api/cart/validate` | re-price cart, check stock; contract `src/contracts/cart.ts` | 🧪 |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
-| POST | `/api/checkout` | create order (COD) or Stripe session (CARD); contract `src/contracts/checkout.ts`; 409 `CART_CHANGED` if prices/stock moved | 🧪 |
+| POST | `/api/checkout` | create order; COD (payment PENDING), CARD / PAYPAL (simulated, PAID; CARD sends `card.last4` only); contract `src/contracts/checkout.ts`; 409 `CART_CHANGED` if prices/stock moved | 🧪 |
 | GET | `/api/orders/:number` | order confirmation, `?token=` from checkout; wrong number or token → 404; contract `src/contracts/orders.ts` | 🧪 |
 | POST | `/api/account/login` | email magic link; always 202; contract `src/contracts/account.ts` | 🧪 |
 | POST | `/api/account/logout` | end the session | 🧪 |
@@ -138,7 +138,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 | GET/POST | `/api/account/addresses` | address book, max 5 | 🧪 |
 | DELETE | `/api/account/addresses/:id` | remove an address | 🧪 |
 | GET/POST/DELETE | `/api/wishlist` | customer wishlist | ⬜ |
-| POST | `/api/webhooks/stripe` | payment confirmation | ⬜ |
+| POST | `/api/webhooks/stripe` | not needed: payments are simulated (§12) | — |
 | GET | `/api/admin/stats` | overview KPIs | ⬜ |
 | GET | `/api/admin/orders` | list + filters | ⬜ |
 | GET/PATCH | `/api/admin/orders/:id` | detail, change status (triggers notification) | ⬜ |
@@ -259,8 +259,8 @@ Canvas artboard **"H1 · Cover"** (the first artboard, `Main`). A fashion-magazi
 ```
 DATABASE_URL=
 AUTH_SECRET=
-STRIPE_SECRET_KEY=          # test mode key only
-STRIPE_WEBHOOK_SECRET=
+STRIPE_SECRET_KEY=          # unused: payments are simulated (§12); remove from .env.example
+STRIPE_WEBHOOK_SECRET=      # unused
 RESEND_API_KEY=
 CLOUDINARY_URL=
 WHATSAPP_NUMBER=            # owner's number for wa.me links
@@ -290,6 +290,7 @@ pnpm db:studio      # browse the DB
 | 2026-11-20 | Home hero = **H1 · Cover** (giant serif wordmark, model cut-out in front of the letters) | Sharaf |
 | 2026-11-20 | `main` allows direct pushes from both of us; no required PR, review or CI (force push/delete still blocked) | both |
 | 2026-11-20 | English only: dropped FR/AR and next-intl; pages live directly under `src/app/` | Sharaf |
+| 2026-11-20 | Payments are simulated, no Stripe: demo card form (test numbers only, number never leaves the browser), simulated PayPal approval, cash on delivery | Sharaf |
 | 2026-11-20 | **To confirm:** shipping €8 flat, free from €200; delivery to FR, BE, LU, NL, DE, ES, IT, PT; guest checkout only for now (`SHIPPING` / `SHIP_TO` in `src/contracts/checkout.ts`) | Sharaf (proposal) |
 | 2026-11-20 | Admin lives at `/admin`; public demo login `test` / `test` with a DEMO role and a nightly reset | both |
 | 2026-11-20 | One Next.js repo; frontend talks to backend only through `/api` + `src/contracts` | both |
@@ -299,6 +300,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Simulated payments: card (demo form, `checkDemoCard()` tested, only `last4` sent), PayPal (simulated approval dialog), cash on delivery; checkout + orders contracts: `PaymentMethod` COD / CARD / PAYPAL, `card.last4`, `cardLast4`, no `checkoutUrl` | — |
 | 2026-11-20 | feat(shop) | Cart page `/cart`: full bag (same lines as the drawer, larger), summary with shipping and "add €X for free shipping", checkout; drawer gets "View bag"; header bag is a link to /cart that opens the drawer with JS | — |
 | 2026-11-20 | feat(shop) | Wishlist: heart on cards + product page, header link with count, `/wishlist` grid; saved in localStorage (`src/lib/wishlist.ts`, tested), not synced to `/api/wishlist` yet; `toSummary()` moved to `src/lib/summary.ts` | — |
 | 2026-11-20 | feat(shop) | Account `/account`: magic-link sign-in (mock: "Open the link (demo)" button), orders list → order page, address book (add / remove, max 5), sign out; server actions in `src/app/(shop)/account/actions.ts` call `src/lib/api/account.ts` (forwards cookies; mock keeps session + addresses in cookies); account contract + tests; shared form fields in `form-field.tsx` | — |

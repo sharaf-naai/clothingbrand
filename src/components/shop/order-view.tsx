@@ -28,7 +28,11 @@ export function OrderView({ order: o, placed }: { order: Order; placed: boolean 
       </p>
       <h1 className="mt-4 font-serif text-5xl leading-none tracking-[-0.02em] sm:text-6xl">{placed ? "Thank you." : "Your order"}</h1>
       <p className="mt-4 text-sm leading-relaxed">
-        {o.paymentMethod === "COD" ? "Cash on delivery: pay when it arrives." : o.paymentStatus === "PAID" ? "Paid by card." : "Card payment pending."}{" "}
+        {o.paymentMethod === "COD"
+          ? "Cash on delivery: pay when it arrives."
+          : o.paymentMethod === "PAYPAL"
+            ? "Paid with PayPal (demo)."
+            : `Paid by card${o.cardLast4 ? ` ending ${o.cardLast4}` : ""} (demo).`}{" "}
         A confirmation is on its way to {o.customer.email}.
         <br />
         <span className="text-grey">This is a concept store: nothing will be delivered or charged.</span>

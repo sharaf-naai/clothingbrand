@@ -18,6 +18,7 @@ export function mockAccountOrders(email: string): AccountOrders {
       number,
       status,
       paymentMethod: "CARD",
+      cardLast4: "4242",
       paymentStatus: "PAID",
       createdAt,
       customer: { name: "Demo Customer", email },

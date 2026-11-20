@@ -1,7 +1,7 @@
 // Contract for GET /api/orders/:number?token=… (CLAUDE.md §5, §6). SHARED: changing this file needs both approvals.
 // The guest confirmation page. Unknown number OR wrong token → 404 (never reveal that an order exists).
 import { z } from "zod";
-import { Address, OrderNumber } from "./checkout.ts";
+import { Address, OrderNumber, PaymentMethod } from "./checkout.ts";
 import { Money } from "./common.ts";
 import { Size } from "./products.ts";
 
@@ -24,7 +24,9 @@ export const OrderItem = z.object({
 export const Order = z.object({
   number: OrderNumber,
   status: OrderStatus,
-  paymentMethod: z.enum(["COD", "CARD"]),
+  paymentMethod: PaymentMethod,
+  /** CARD only: last 4 digits, for "Paid by card ending 4242". */
+  cardLast4: z.string().length(4).nullable(),
   paymentStatus: PaymentStatus,
   createdAt: z.iso.datetime(),
   customer: z.object({ name: z.string(), email: z.email() }),

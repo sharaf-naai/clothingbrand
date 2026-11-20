@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { CheckoutRequest, CheckoutResponse, shippingFor } from "../contracts/checkout.ts";
 import { ApiRequestError } from "../contracts/errors.ts";
 import { checkoutMock } from "./checkout.ts";
+import { getMockOrder } from "./orders.ts";
 
 const valid = {
   items: [{ variantId: "vy-tote-one-navy", qty: 1 }],
@@ -24,12 +25,21 @@ test("COD order: totals include shipping", () => {
   assert.deepEqual([r.subtotal.amount, r.shipping.amount, r.total.amount], [6000, 800, 6800]);
 });
 
-test("CARD order returns a checkout URL; free shipping over €200", () => {
+test("CARD order is paid and keeps only the last 4 digits; free shipping over €200", () => {
   const r = CheckoutResponse.parse(
-    checkoutMock(CheckoutRequest.parse({ ...valid, paymentMethod: "CARD", items: [{ variantId: "vy-coat-m-ivory", qty: 1 }] })),
+    checkoutMock(CheckoutRequest.parse({ ...valid, paymentMethod: "CARD", card: { last4: "4242" }, items: [{ variantId: "vy-coat-m-ivory", qty: 1 }] })),
   );
-  assert.ok(r.paymentMethod === "CARD" && r.checkoutUrl.startsWith(`/orders/${r.orderNumber}?token=`));
+  const order = getMockOrder(r.orderNumber, r.token)!;
+  assert.deepEqual([order.paymentMethod, order.paymentStatus, order.cardLast4], ["CARD", "PAID", "4242"]);
   assert.equal(r.shipping.amount, 0);
+});
+
+test("PAYPAL is paid with no card; CARD needs last4 and nothing more", () => {
+  const r = checkoutMock(CheckoutRequest.parse({ ...valid, paymentMethod: "PAYPAL" }));
+  const order = getMockOrder(r.orderNumber, r.token)!;
+  assert.deepEqual([order.paymentStatus, order.cardLast4], ["PAID", null]);
+  assert.throws(() => CheckoutRequest.parse({ ...valid, paymentMethod: "CARD" }), /Card details missing/);
+  assert.throws(() => CheckoutRequest.parse({ ...valid, paymentMethod: "CARD", card: { last4: "4242424242424242" } }));
 });
 
 test("a changed cart is a 409 CART_CHANGED", () => {
@@ -48,7 +58,6 @@ test("form errors point at the field", () => {
 
 test("the order behind a checkout can be read back with its token, and only with it", async () => {
   const { Order } = await import("../contracts/orders.ts");
-  const { getMockOrder } = await import("./orders.ts");
   const r = checkoutMock(CheckoutRequest.parse({ ...valid, customer: { ...valid.customer, name: "Zoë Ångström" } }));
   const order = Order.parse(getMockOrder(r.orderNumber, r.token));
   assert.equal(order.customer.name, "Zoë Ångström");
