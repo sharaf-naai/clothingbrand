@@ -117,7 +117,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 - Dates as ISO 8601 strings (UTC).
 - Lists: `{ items: [...], page, pageSize, total }`. Query: `page`, `pageSize` (max 50), `sort`. Shared pieces (`Money`, `PageQuery`, `listOf`) are in `src/contracts/common.ts`.
 - Inside `src/contracts` and `src/mocks`, relative imports keep the `.ts` extension (`./common.ts`) so `node --test` can load them without a build step. Tests are `*.test.ts` files next to the code.
-- Errors: HTTP status + `{ "error": { "code": "OUT_OF_STOCK", "message": "…", "fields": { … } } }`. Codes are UPPER_SNAKE and listed in `src/contracts/errors.ts`.
+- Errors: HTTP status + `{ "error": { "code": "VALIDATION_ERROR", "message": "…", "fields": { … } } }`. Codes are UPPER_SNAKE and listed in `src/contracts/errors.ts` (`ApiError` schema). Stock problems in a cart are not errors: `/api/cart/validate` returns 200 with a status per line.
 - Admin endpoints require a session; the DEMO role gets `403 DEMO_FORBIDDEN` on blocked actions (§7).
 
 **Endpoints v1** (✅ = done, 🧪 = mocked only, ⬜ = not started; keep this table updated)
@@ -127,7 +127,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 | GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`); contract `src/contracts/products.ts` | 🧪 |
 | GET | `/api/products/:slug` | product detail + variants + stock; 404 if not found | 🧪 |
 | GET | `/api/drops/current` | current/next drop | ⬜ |
-| POST | `/api/cart/validate` | re-price cart, check stock | ⬜ |
+| POST | `/api/cart/validate` | re-price cart, check stock; contract `src/contracts/cart.ts` | 🧪 |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
 | POST | `/api/checkout` | create order (COD) or Stripe session (CARD) | ⬜ |
 | GET | `/api/orders/:number` | order confirmation (with token) | ⬜ |
@@ -292,6 +292,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
 | 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |
 | 2026-11-20 | feat(shop) | Home hero H1 · Cover (wordmark, model cut-out, header, motion); hero spec added as §8.1; images in `public/assets/` | — |
 | 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | — |
