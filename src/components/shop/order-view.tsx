@@ -5,12 +5,16 @@ import type { Order, OrderStatus } from "@/contracts/orders";
 import { formatDate, formatMoney } from "@/lib/format";
 
 const label = "text-[11px] uppercase tracking-[.16em] text-grey";
-const steps: { status: OrderStatus; name: string }[] = [
-  { status: "NEW", name: "Received" },
-  { status: "CONFIRMED", name: "Confirmed" },
-  { status: "SHIPPED", name: "Shipped" },
-  { status: "DELIVERED", name: "Delivered" },
-];
+const names: Record<OrderStatus, string> = {
+  NEW: "Received",
+  CONFIRMED: "Confirmed",
+  SHIPPED: "Shipped",
+  DELIVERED: "Delivered",
+  CANCELLED: "Cancelled",
+  RETURNED: "Returned",
+};
+export const statusName = (s: OrderStatus) => names[s];
+const steps = (["NEW", "CONFIRMED", "SHIPPED", "DELIVERED"] as const).map((status) => ({ status, name: names[status] }));
 
 /** One order: progress, items, totals, delivery. `placed` = shown right after checkout. */
 export function OrderView({ order: o, placed }: { order: Order; placed: boolean }) {
@@ -31,7 +35,7 @@ export function OrderView({ order: o, placed }: { order: Order; placed: boolean 
       </p>
 
       {stopped ? (
-        <p className={`${label} mt-10 text-burgundy`}>{o.status === "CANCELLED" ? "Cancelled" : "Returned"}</p>
+        <p className={`${label} mt-10 text-burgundy`}>{statusName(o.status)}</p>
       ) : (
         <ol className="mt-10 grid grid-cols-4 gap-2" aria-label="Order progress">
           {steps.map((s, i) => (

@@ -131,6 +131,12 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 | POST | `/api/discounts/validate` | check a code | ⬜ |
 | POST | `/api/checkout` | create order (COD) or Stripe session (CARD); contract `src/contracts/checkout.ts`; 409 `CART_CHANGED` if prices/stock moved | 🧪 |
 | GET | `/api/orders/:number` | order confirmation, `?token=` from checkout; wrong number or token → 404; contract `src/contracts/orders.ts` | 🧪 |
+| POST | `/api/account/login` | email magic link; always 202; contract `src/contracts/account.ts` | 🧪 |
+| POST | `/api/account/logout` | end the session | 🧪 |
+| GET | `/api/account/me` | signed-in customer, 401 when signed out | 🧪 |
+| GET | `/api/account/orders` | the customer's orders (summaries with the order token) | 🧪 |
+| GET/POST | `/api/account/addresses` | address book, max 5 | 🧪 |
+| DELETE | `/api/account/addresses/:id` | remove an address | 🧪 |
 | GET/POST/DELETE | `/api/wishlist` | customer wishlist | ⬜ |
 | POST | `/api/webhooks/stripe` | payment confirmation | ⬜ |
 | GET | `/api/admin/stats` | overview KPIs | ⬜ |
@@ -293,6 +299,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Account `/account`: magic-link sign-in (mock: "Open the link (demo)" button), orders list → order page, address book (add / remove, max 5), sign out; server actions in `src/app/(shop)/account/actions.ts` call `src/lib/api/account.ts` (forwards cookies; mock keeps session + addresses in cookies); account contract + tests; shared form fields in `form-field.tsx` | — |
 | 2026-11-20 | feat(shop) | Order page `/orders/[number]?token=` (progress steps, items, totals, delivery; `&placed=1` empties the bag); checkout now returns `token` and sends COD + Stripe success to it; orders contract + mock + test | — |
 | 2026-11-20 | feat(shop) | Site footer on every page (shop + "you" links, concept-store note) and a 404 page (`src/app/not-found.tsx`) | — |
 | 2026-11-20 | feat(shop) | Search: `/search?q=` page (results grid, no-results state, first 50 only) + header search overlay (results as you type, Enter → full results) + search field in the mobile menu; forms use `next/form` (work without JS) | — |
