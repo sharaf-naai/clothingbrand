@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { getCurrentDrops } from "@/lib/api/drops";
 import { listProducts } from "@/lib/api/products";
 import { formatDate } from "@/lib/format";
@@ -7,6 +8,8 @@ const label = "text-[11px] uppercase tracking-[.16em] text-grey";
 
 // /drops: the live drop with its pieces, then a teaser for the next one.
 export async function DropsPage() {
+  // Per request, not at build: a drop going live must show without a redeploy.
+  await connection();
   const { current, next } = await getCurrentDrops();
   const pieces = current ? (await listProducts({ drop: current.number, pageSize: 50 })).items : [];
 
