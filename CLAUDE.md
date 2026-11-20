@@ -23,7 +23,7 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 ## 2. What we're building
 
 **Storefront** (public)
-- Home (editorial hero, design picked from the canvas), Woman / Man / Drops listing pages, product page, search.
+- Home (editorial hero **H1 · Cover**, see §8.1), Woman / Man / Drops listing pages, product page, search.
 - Cart drawer, checkout with **cash on delivery** or **card (Stripe test mode)**, order confirmation.
 - Customer account (orders, addresses), wishlist.
 - Language: English only.
@@ -37,7 +37,7 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 **Public demo login (for the portfolio):** at `/admin/login`, username `test` / password `test` signs in as the **DEMO** role (§7). A banner reads "Demo mode — data resets every night".
 
-Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs (hero directions; the chosen one gets noted in §12).
+Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs. The chosen hero is the artboard **"H1 · Cover"** (spec in §8.1).
 
 ---
 
@@ -66,7 +66,7 @@ Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs (hero
 ├─ prisma/
 │  ├─ schema.prisma          (backend)
 │  └─ seed.ts                (backend) demo data, also used by the nightly reset
-├─ public/                   (frontend) static images, fonts, icons
+├─ public/assets/            (frontend) images and other static files, served at /assets/…
 └─ src/
    ├─ app/
    │  ├─ (shop)/…            (frontend) storefront pages
@@ -172,6 +172,41 @@ Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyw
 - **Photos:** generated with a consistent setup (backdrop matching the page colour, light from the left, no text or logos). The prompts are on the canvas.
 - Accessibility: real buttons and links, 44px targets, 4.5:1 text contrast, keyboard navigation.
 
+### 8.1 Home hero: "H1 · Cover" (chosen)
+Canvas artboard **"H1 · Cover"** (the first artboard, `Main`). A fashion-magazine cover: the brand name is the page.
+
+**Layout (desktop 1440×900, full viewport height)**
+- Background: ivory `#F4F1EC`, nothing else.
+- **Wordmark:** "VEYL" in **Bodoni Moda 500**, centered, ~440px at 1440 wide (`clamp(160px, 30vw, 480px)`), line-height 0.9, letter-spacing −0.04em, ink `#111111`. Top edge ~70px below the top. It sits **behind** the model (z-index 1).
+- **Model cut-out:** a transparent PNG/WebP centered horizontally, standing in front of the letters (z-index 2). Its head overlaps the top of the wordmark, and its feet touch the bottom edge of the hero. About 400×750px on desktop.
+- **Header** (z-index 5, transparent, 48px side margins):
+  - left: `Woman · Man · Drops`
+  - right: search icon, `Account`, bag icon + `(0)`
+  - Geist 12px, uppercase, letter-spacing .12em, ink; every item is a 44px tap target.
+- **Bottom left:** a label "Drop 01 · Autumn" (Geist 11px, uppercase, letter-spacing .16em, grey `#6B665F`). Under it, *"Quiet pieces, made to stay."* in Bodoni Moda italic 30px, on two lines.
+- **Bottom right:** the CTA **"Shop the drop →"**, a text link: Geist 13px, uppercase, letter-spacing .14em, with a 1px ink underline. It links to the current drop (`GET /api/drops/current`).
+- No other elements: no badges, no extra buttons, no gradients.
+
+**Motion** (subtle, fashion-site, never flashy)
+- Load: the wordmark letters rise 40px and fade in, staggered 60ms. The model fades in 200ms later with a tiny scale from 1.03 to 1. Then the header and the bottom texts fade in.
+- Scroll: the wordmark moves slower than the page (parallax 0.6) and the model slightly faster (1.05), so the model "steps forward" out of the letters as you scroll.
+- `prefers-reduced-motion`: no motion; everything is visible at once.
+
+**Responsive**
+- Tablet: wordmark ~26vw; the model keeps its height ratio.
+- Mobile (≤ 640px): the wordmark spans the full width (~32vw) near the top, and the model fills the lower 75% of the screen. The header becomes `Menu` (left) + bag (right). The bottom texts stack above the CTA.
+
+**Hero image (generate with Astra; prompt also on the canvas sticky "PROMPT 1")**
+> Full-body studio fashion photograph of one model standing straight and centered, facing camera, calm neutral expression. Oversized ivory wool coat (unbuttoned) over a light grey fine-knit sweater, wide-leg stone-coloured trousers, white minimal sneakers. Seamless warm off-white backdrop exactly #F4F1EC, soft diffused daylight from the LEFT, faint floor shadow. 85mm lens, high-end catalogue look, muted warm-neutral grade, no text, no logos. Vertical 4:5, subject fills ~85% of the height with lots of empty space left and right.
+- Deliver **two files**: the full photo (fallback, and for social sharing) and a **cut-out with a transparent background** (the hero uses this one).
+- Files: `public/assets/hero-full.png` (original photo) and `public/assets/hero-cutout.webp` (cut-out, 525×1343, trimmed to the model). The current cut-out was made by removing the flat backdrop with a script; the hair edge is slightly clipped, so replace it with a proper cut-out when one exists.
+- Export as WebP/AVIF: about 1600px tall for desktop and 1000px for mobile, both under 300 KB. Preload the hero image.
+- Rule for all future photos: the backdrop matches the page colour, the light comes from the left, and there's no text or logo in the image.
+
+**Who does what**
+- Frontend: the whole hero UI, motion, responsive layouts and image optimisation.
+- Backend: `GET /api/drops/current` returns the drop number, name and slug for the label and the CTA. Until it exists, the frontend mocks "Drop 01 · Autumn".
+
 ---
 
 ## 9. Git and GitHub workflow
@@ -229,17 +264,18 @@ pnpm db:studio      # browse the DB
 
 | Date | Decision | Who |
 |---|---|---|
+| 2026-11-20 | Home hero = **H1 · Cover** (giant serif wordmark, model cut-out in front of the letters) | Sharaf |
 | 2026-11-20 | `main` allows direct pushes from both of us; no required PR, review or CI (force push/delete still blocked) | both |
 | 2026-11-20 | English only: dropped FR/AR and next-intl; pages live directly under `src/app/` | Sharaf |
 | 2026-11-20 | Admin lives at `/admin`; public demo login `test` / `test` with a DEMO role and a nightly reset | both |
 | 2026-11-20 | One Next.js repo; frontend talks to backend only through `/api` + `src/contracts` | both |
 | 2026-11-20 | Neutral minimal brand (no cultural references), working name VEYL | Sharaf |
-| — | Chosen hero design: _[H1–H5, to decide]_ | |
 
 ## 13. Changelog (add newest at the top, one line per merged PR that matters)
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Home hero H1 · Cover (wordmark, model cut-out, header, motion); hero spec added as §8.1; images in `public/assets/` | — |
 | 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | — |
 | 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | — |
 | 2026-11-20 | chore | Vercel project linked to GitHub (preview per PR, `main` = production); `NEXT_PUBLIC_USE_MOCKS=true` set | — |

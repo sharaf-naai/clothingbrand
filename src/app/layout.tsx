@@ -3,7 +3,7 @@ import { Bodoni_Moda, Geist } from "next/font/google";
 import "./globals.css";
 
 const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
-const bodoni = Bodoni_Moda({ variable: "--font-bodoni", subsets: ["latin"] });
+const bodoni = Bodoni_Moda({ variable: "--font-bodoni", subsets: ["latin"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
   title: "VEYL",
