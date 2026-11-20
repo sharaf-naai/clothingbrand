@@ -12,9 +12,11 @@ const MOCK_ADDRESSES = "veyl_mock_addresses";
 const cookieOpts = { httpOnly: true, sameSite: "lax" as const, path: "/", maxAge: 60 * 60 * 24 * 30 };
 
 async function call(method: string, path: string, body?: unknown): Promise<unknown> {
+  // Read cookies first: it marks the page as per-request, so it's never prerendered at build time.
+  const cookie = (await cookies()).toString();
   const res = await fetch(new URL(`/api/account${path}`, process.env.NEXT_PUBLIC_SITE_URL), {
     method,
-    headers: { cookie: (await cookies()).toString(), ...(body ? { "Content-Type": "application/json" } : {}) },
+    headers: { cookie, ...(body ? { "Content-Type": "application/json" } : {}) },
     body: body ? JSON.stringify(body) : undefined,
     cache: "no-store",
   });
