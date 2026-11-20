@@ -1,5 +1,7 @@
+import Form from "next/form";
 import Link from "next/link";
 import { BagButton } from "./bag-buttons";
+import { HeaderSearch } from "./header-search";
 
 const nav = [
   { href: "/woman", label: "Woman" },
@@ -8,15 +10,6 @@ const nav = [
 ];
 
 const item = "inline-flex min-h-11 items-center";
-
-function SearchIcon() {
-  return (
-    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
-      <circle cx="7" cy="7" r="5" />
-      <path d="m11 11 3.5 3.5" />
-    </svg>
-  );
-}
 
 // Transparent header (CLAUDE.md §8.1). `overlay`: sits over the home hero, whose wordmark is the logo.
 // Otherwise it sits in the page flow and shows a small VEYL link home.
@@ -36,8 +29,16 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
       {/* Mobile: native disclosure, no JS */}
       <details className="relative sm:hidden">
         <summary className={`${item} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>Menu</summary>
-        <nav aria-label="Main" className="absolute left-0 top-full flex min-w-48 flex-col bg-ivory py-2">
-          {[...nav, { href: "/search", label: "Search" }, { href: "/account", label: "Account" }].map((l) => (
+        <nav aria-label="Main" className="absolute left-0 top-full flex w-[calc(100vw-2.5rem)] max-w-xs flex-col bg-ivory py-2">
+          <search>
+            <Form action="/search" className="mb-2 border-b border-ink">
+              <label htmlFor="menu-q" className="sr-only">
+                Search the shop
+              </label>
+              <input id="menu-q" name="q" type="search" placeholder="Search" maxLength={100} className="min-h-11 w-full bg-transparent normal-case tracking-normal placeholder:text-grey" />
+            </Form>
+          </search>
+          {[...nav, { href: "/account", label: "Account" }].map((l) => (
             <Link key={l.href} href={l.href} className={item}>
               {l.label}
             </Link>
@@ -57,9 +58,7 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
       </nav>
 
       <div className="flex items-center gap-6">
-        <Link href="/search" aria-label="Search" className={`${item} hidden min-w-11 justify-center sm:inline-flex`}>
-          <SearchIcon />
-        </Link>
+        <HeaderSearch className={`${item} hidden min-w-11 justify-center sm:inline-flex`} />
         <Link href="/account" className={`${item} hidden sm:inline-flex`}>
           Account
         </Link>

@@ -293,6 +293,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Search: `/search?q=` page (results grid, no-results state, first 50 only) + header search overlay (results as you type, Enter → full results) + search field in the mobile menu; forms use `next/form` (work without JS) | — |
 | 2026-11-20 | feat(shop) | Checkout page `/checkout`: guest form (contact, delivery, COD or card), summary with shipping, inline field errors, CART_CHANGED handling, confirmation; checkout contract + mock + tests; `ApiRequestError` in `errors.ts`; `recheckCart()` shared with the drawer | — |
 | 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
 | 2026-11-20 | feat(shop) | Cart drawer (native <dialog>), header bag count, Add to bag wired; bag saved in localStorage (`src/lib/cart.ts`, tested); re-checked with `validateCart()` each time the drawer opens (price changes, lower stock and removed items shown as notices) | — |
