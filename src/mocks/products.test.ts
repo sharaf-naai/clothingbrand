@@ -11,7 +11,10 @@ test("every mock product matches the contract", () => {
 });
 
 test("filters by section and search text", () => {
-  assert.ok(list({ section: "MAN" }).items.every((p) => p.section === "MAN"));
+  const man = list({ section: "MAN" }).items;
+  assert.ok(man.every((p) => p.section === "MAN" || p.section === "UNISEX"));
+  assert.ok(man.some((p) => p.slug === "canvas-tote"), "unisex shows in MAN");
+  assert.ok(list({ section: "UNISEX" }).items.every((p) => p.section === "UNISEX"));
   assert.deepEqual(list({ q: "TRENCH" }).items.map((p) => p.slug), ["trench"]);
 });
 

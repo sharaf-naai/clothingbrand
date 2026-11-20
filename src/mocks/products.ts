@@ -132,7 +132,7 @@ function toSummary(p: Product): ProductSummary {
 export function listMockProducts(query: ProductListQuery): ProductList {
   const q = query.q?.toLowerCase();
   const matches = mockProducts
-    .filter((p) => !query.section || p.section === query.section)
+    .filter((p) => !query.section || p.section === query.section || p.section === "UNISEX")
     .filter((p) => !query.category || p.category.slug === query.category)
     .filter((p) => !query.drop || p.drop?.number === query.drop)
     .filter((p) => !query.color || p.variants.some((v) => v.color.name.toLowerCase() === query.color!.toLowerCase()))

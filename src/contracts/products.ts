@@ -54,6 +54,7 @@ export const ProductSummary = Product.pick({
 
 /** GET /api/products query string. */
 export const ProductListQuery = PageQuery.extend({
+  /** WOMAN or MAN also returns UNISEX products; UNISEX returns only UNISEX. */
   section: Section.optional(),
   category: z.string().optional(),
   drop: z.string().optional(),
