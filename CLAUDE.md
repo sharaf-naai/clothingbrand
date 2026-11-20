@@ -129,7 +129,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 | GET | `/api/drops/current` | current/next drop | ⬜ |
 | POST | `/api/cart/validate` | re-price cart, check stock; contract `src/contracts/cart.ts` | 🧪 |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
-| POST | `/api/checkout` | create order (COD) or Stripe session (CARD) | ⬜ |
+| POST | `/api/checkout` | create order (COD) or Stripe session (CARD); contract `src/contracts/checkout.ts`; 409 `CART_CHANGED` if prices/stock moved | 🧪 |
 | GET | `/api/orders/:number` | order confirmation (with token) | ⬜ |
 | GET/POST/DELETE | `/api/wishlist` | customer wishlist | ⬜ |
 | POST | `/api/webhooks/stripe` | payment confirmation | ⬜ |
@@ -284,6 +284,7 @@ pnpm db:studio      # browse the DB
 | 2026-11-20 | Home hero = **H1 · Cover** (giant serif wordmark, model cut-out in front of the letters) | Sharaf |
 | 2026-11-20 | `main` allows direct pushes from both of us; no required PR, review or CI (force push/delete still blocked) | both |
 | 2026-11-20 | English only: dropped FR/AR and next-intl; pages live directly under `src/app/` | Sharaf |
+| 2026-11-20 | **To confirm:** shipping €8 flat, free from €200; delivery to FR, BE, LU, NL, DE, ES, IT, PT; guest checkout only for now (`SHIPPING` / `SHIP_TO` in `src/contracts/checkout.ts`) | Sharaf (proposal) |
 | 2026-11-20 | Admin lives at `/admin`; public demo login `test` / `test` with a DEMO role and a nightly reset | both |
 | 2026-11-20 | One Next.js repo; frontend talks to backend only through `/api` + `src/contracts` | both |
 | 2026-11-20 | Neutral minimal brand (no cultural references), working name VEYL | Sharaf |
@@ -292,6 +293,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Checkout page `/checkout`: guest form (contact, delivery, COD or card), summary with shipping, inline field errors, CART_CHANGED handling, confirmation; checkout contract + mock + tests; `ApiRequestError` in `errors.ts`; `recheckCart()` shared with the drawer | — |
 | 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
 | 2026-11-20 | feat(shop) | Cart drawer (native <dialog>), header bag count, Add to bag wired; bag saved in localStorage (`src/lib/cart.ts`, tested); re-checked with `validateCart()` each time the drawer opens (price changes, lower stock and removed items shown as notices) | — |
 | 2026-11-20 | feat(shop) | Product page `/products/[slug]`: images, colour + size as links (`?color=`, `?size=`), stock states, `selectVariant()` with tests; Add to bag not wired yet | — |
