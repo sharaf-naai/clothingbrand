@@ -18,9 +18,11 @@ _Last updated 2026-11-20 by Sharaf._
 | 3 | [#4](https://github.com/sharaf-naai/clothingbrand/pull/4) Woman / Man listing pages | Sharaf | #2 |
 | 4 | [#5](https://github.com/sharaf-naai/clothingbrand/pull/5) Product page | Sharaf | #4 |
 | 5 | [#6](https://github.com/sharaf-naai/clothingbrand/pull/6) Cart drawer + Add to bag + stock re-check | Sharaf | #5 |
+| 6 | [#7](https://github.com/sharaf-naai/clothingbrand/pull/7) Checkout page + checkout contract | **both** (adds `src/contracts/checkout.ts`) | #6 |
 
 - Merge with **Delete branch** on (`gh pr merge <n> --merge --delete-branch`): GitHub then retargets the next PR to `main` by itself.
-- #6 also shows #3's commit (it was merged into the cart branch) until #3 is in.
+- #6 and #7 also show #3's commit (it was merged into the cart branch) until #3 is in.
+- #7 has placeholder rules to confirm before approving: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only (see §12 in that PR).
 - If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first.
 - Zidane: #2 and #3 each end with a few questions in the description; answer them before approving.
 
