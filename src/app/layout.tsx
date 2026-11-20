@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bodoni_Moda, Geist } from "next/font/google";
 import { CartDrawer } from "@/components/shop/cart-drawer";
+import { SiteFooter } from "@/components/shop/site-footer";
 import "./globals.css";
 
 const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${geist.variable} ${bodoni.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {children}
+        <SiteFooter />
         <CartDrawer />
       </body>
     </html>
