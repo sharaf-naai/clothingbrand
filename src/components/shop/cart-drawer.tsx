@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { validateCart } from "@/lib/api/cart";
 import { cart, cartTotals, useCart, type CartLine } from "@/lib/cart";
 import { formatMoney } from "@/lib/format";
 
 const label = "text-[11px] uppercase tracking-[.16em] text-grey";
+const checkoutCls = "mt-5 flex min-h-12 w-full items-center justify-center text-xs uppercase tracking-[.14em]";
 const qtyBtn = "flex size-11 items-center justify-center text-base disabled:text-stone";
 
 function Line({ line: l }: { line: CartLine }) {
@@ -58,7 +60,7 @@ function Line({ line: l }: { line: CartLine }) {
 
 // Slide-in bag. A native <dialog> gives focus trapping, Esc to close and an inert page behind it.
 export function CartDrawer() {
-  const { lines, open } = useCart();
+  const { lines, open, checking, notices } = useCart();
   const ref = useRef<HTMLDialogElement>(null);
   const { count, subtotal } = cartTotals(lines);
 
@@ -67,6 +69,20 @@ export function CartDrawer() {
     if (!d) return;
     if (open && !d.open) d.showModal();
     if (!open && d.open) d.close();
+  }, [open]);
+
+  // Re-price and re-check stock every time the drawer opens.
+  useEffect(() => {
+    const items = cart.lines();
+    if (!open || items.length === 0) return;
+    let stale = false;
+    cart.startCheck();
+    validateCart(items.map(({ variantId, qty }) => ({ variantId, qty })))
+      .then((res) => !stale && cart.applyValidation(res))
+      .catch(() => !stale && cart.checkFailed());
+    return () => {
+      stale = true;
+    };
   }, [open]);
 
   return (
@@ -87,6 +103,14 @@ export function CartDrawer() {
             Close
           </button>
         </div>
+
+        {notices.length > 0 && (
+          <ul aria-live="polite" className="mt-4 space-y-1 border-l border-burgundy pl-3 text-xs text-burgundy">
+            {notices.map((n) => (
+              <li key={n}>{n}</li>
+            ))}
+          </ul>
+        )}
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center">
@@ -112,14 +136,16 @@ export function CartDrawer() {
                 <span>{formatMoney(subtotal)}</span>
               </div>
               <p className={`${label} mt-2 normal-case tracking-normal`}>Shipping and discount codes at checkout.</p>
-              {/* shortcut: /checkout doesn't exist yet */}
-              <Link
-                href="/checkout"
-                onClick={cart.close}
-                className="mt-5 flex min-h-12 w-full items-center justify-center bg-ink text-xs uppercase tracking-[.14em] text-ivory"
-              >
-                Checkout
-              </Link>
+              {checking ? (
+                <button type="button" disabled className={`${checkoutCls} bg-stone text-grey`}>
+                  Checking stock…
+                </button>
+              ) : (
+                // shortcut: /checkout doesn't exist yet
+                <Link href="/checkout" onClick={cart.close} className={`${checkoutCls} bg-ink text-ivory`}>
+                  Checkout
+                </Link>
+              )}
             </div>
           </>
         )}

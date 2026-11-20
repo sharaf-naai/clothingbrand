@@ -293,7 +293,7 @@ pnpm db:studio      # browse the DB
 | Date | Area | Change | PR |
 |---|---|---|---|
 | 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
-| 2026-11-20 | feat(shop) | Cart drawer (native <dialog>), header bag count, Add to bag wired; bag saved in localStorage (`src/lib/cart.ts`, tested); prices not re-validated yet (needs `/api/cart/validate` contract) | — |
+| 2026-11-20 | feat(shop) | Cart drawer (native <dialog>), header bag count, Add to bag wired; bag saved in localStorage (`src/lib/cart.ts`, tested); re-checked with `validateCart()` each time the drawer opens (price changes, lower stock and removed items shown as notices) | — |
 | 2026-11-20 | feat(shop) | Product page `/products/[slug]`: images, colour + size as links (`?color=`, `?size=`), stock states, `selectVariant()` with tests; Add to bag not wired yet | — |
 | 2026-11-20 | feat(shop) | Woman / Man listing pages (category + sort links, paging, sold-out state), `formatMoney`; header gets an in-flow mode with the logo; `agentRules: false` | — |
 | 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |

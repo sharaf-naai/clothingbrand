@@ -1,10 +1,12 @@
 // Client-side bag: a tiny store saved to localStorage, shared by the header count, Add to bag and the drawer.
-// shortcut: prices are the snapshot from when the item was added; re-price with POST /api/cart/validate at checkout once that contract exists
+// Prices are copied when an item is added; the drawer re-checks them with POST /api/cart/validate each time it opens.
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
+import { MAX_QTY, type CartValidateResponse } from "../contracts/cart.ts";
 import { Money } from "../contracts/common.ts";
+import { formatMoney } from "./format.ts";
 
-export const MAX_QTY = 10;
+export { MAX_QTY };
 
 const CartLine = z.object({
   variantId: z.string(),
@@ -16,7 +18,7 @@ const CartLine = z.object({
   image: z.string().optional(),
   /** Stock when added, capped at MAX_QTY. */
   maxQty: z.number().int().min(1),
-  qty: z.number().int().min(1),
+  qty: z.number().int().min(1).max(MAX_QTY),
 });
 export type CartLine = z.infer<typeof CartLine>;
 
@@ -43,11 +45,36 @@ export function cartTotals(lines: CartLine[]) {
   };
 }
 
+/**
+ * Applies a /api/cart/validate result: current prices and names, quantity lowered to the stock left,
+ * sold-out and unavailable lines removed. Returns a short notice for each change.
+ */
+export function applyValidation(lines: CartLine[], res: CartValidateResponse) {
+  const notices: string[] = [];
+  const next = lines.flatMap((l) => {
+    const v = res.items.find((i) => i.variantId === l.variantId);
+    if (!v) return [l]; // added while the check was running
+    const what = `${l.name} (${l.size === "ONE" ? l.color : `${l.color}, ${l.size}`})`;
+    if (v.status === "OUT_OF_STOCK" || v.status === "UNAVAILABLE" || !v.product || !v.unitPrice) {
+      notices.push(v.status === "OUT_OF_STOCK" ? `${what} sold out and was removed.` : `${what} is no longer available and was removed.`);
+      return [];
+    }
+    if (v.unitPrice.amount !== l.price.amount) notices.push(`${what} is now ${formatMoney(v.unitPrice)}.`);
+    const updated = { ...l, name: v.product.name, image: v.product.image ?? undefined, price: v.unitPrice };
+    if (v.status === "QTY_REDUCED") {
+      notices.push(`Only ${v.qty} left of ${what}, so your quantity changed.`);
+      return [{ ...updated, qty: Math.min(l.qty, v.qty), maxQty: v.qty }];
+    }
+    return [updated];
+  });
+  return { lines: next, notices };
+}
+
 // --- Store ---
 
 const KEY = "veyl.cart.v1";
-type State = { lines: CartLine[]; open: boolean };
-const EMPTY: State = { lines: [], open: false };
+type State = { lines: CartLine[]; open: boolean; checking: boolean; notices: string[] };
+const EMPTY: State = { lines: [], open: false, checking: false, notices: [] };
 let state = EMPTY;
 let loaded = false;
 const listeners = new Set<() => void>();
@@ -78,7 +105,11 @@ export const cart = {
   add: (line: Omit<CartLine, "qty">) => set({ lines: addLine(state.lines, line), open: true }),
   setQty: (variantId: string, qty: number) => set({ lines: setLineQty(state.lines, variantId, qty) }),
   open: () => set({ open: true }),
-  close: () => set({ open: false }),
+  close: () => set({ open: false, checking: false, notices: [] }),
+  lines: () => state.lines,
+  startCheck: () => set({ checking: true, notices: [] }),
+  applyValidation: (res: CartValidateResponse) => set({ ...applyValidation(state.lines, res), checking: false }),
+  checkFailed: () => set({ checking: false, notices: ["We couldn't check stock just now. Prices are confirmed at checkout."] }),
 };
 
 const subscribe = (l: () => void) => {
