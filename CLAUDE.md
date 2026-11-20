@@ -20,13 +20,19 @@ _Last updated 2026-11-20 by Sharaf._
 | 5 | [#5](https://github.com/sharaf-naai/clothingbrand/pull/5) Product page | Sharaf | #4 |
 | 6 | [#6](https://github.com/sharaf-naai/clothingbrand/pull/6) Cart drawer + Add to bag + stock re-check | Sharaf | #5 |
 | 7 | [#7](https://github.com/sharaf-naai/clothingbrand/pull/7) Checkout page + checkout contract | **both** (adds `src/contracts/checkout.ts`) | #6 |
+| 8 | [#9](https://github.com/sharaf-naai/clothingbrand/pull/9) Search page + header search overlay | Sharaf | #7 |
+| 9 | [#10](https://github.com/sharaf-naai/clothingbrand/pull/10) Site footer + 404 page | Sharaf | #9 |
+| 10 | [#11](https://github.com/sharaf-naai/clothingbrand/pull/11) Order confirmation page + orders contract (checkout returns a `token`) | **both** (adds `src/contracts/orders.ts`, changes `checkout.ts`) | #10 |
+| 11 | [#12](https://github.com/sharaf-naai/clothingbrand/pull/12) Customer account (magic link, orders, addresses) + account contract | **both** (adds `src/contracts/account.ts`) | #11 |
+| 12 | [#13](https://github.com/sharaf-naai/clothingbrand/pull/13) Wishlist (local, not synced yet) | Sharaf | #12 |
 
 - #8 and #5 both sit on #4 (separate branches). After #4 merges, both retarget to `main`; merge #8 first because it also fixes CI (`NEXT_PUBLIC_USE_MOCKS=true` in `ci.yml`; remove that line once the real API is live).
 - Merge with **Delete branch** on (`gh pr merge <n> --merge --delete-branch`): GitHub then retargets the next PR to `main` by itself.
 - #6 and #7 also show #3's commit (it was merged into the cart branch) until #3 is in.
 - #7 has placeholder rules to confirm before approving: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only (see §12 in that PR).
 - If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first.
-- Zidane: #2 and #3 each end with a few questions in the description; answer them before approving.
+- Zidane: #2, #3, #11 and #12 have notes or questions for you at the end of their descriptions; read them before approving.
+- #11 and #12 also define backend work: random order tokens (the mock packs the order into the token; real ones must be secrets) and the magic-link login (`/api/account/*`, can wrap Auth.js).
 
 **Changed today (read this, Zidane):**
 - **English only.** FR/AR and next-intl are gone. No `[locale]` in routes (pages live in `src/app/`), no `messages/`, and API text fields are plain strings, not `{ en, fr, ar }`.
