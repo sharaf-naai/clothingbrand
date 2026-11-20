@@ -11,14 +11,22 @@ function BagIcon() {
   );
 }
 
-/** Header bag: icon + (count), opens the drawer. */
+/** Header bag: icon + (count). Opens the drawer; without JS it's a plain link to /cart. */
 export function BagButton({ className }: { className: string }) {
   const { count } = cartTotals(useCart().lines);
   return (
-    <button type="button" aria-label={`Bag, ${count} ${count === 1 ? "item" : "items"}`} onClick={cart.open} className={`${className} gap-1.5`}>
+    <a
+      href="/cart"
+      aria-label={`Bag, ${count} ${count === 1 ? "item" : "items"}`}
+      onClick={(e) => {
+        e.preventDefault();
+        cart.open();
+      }}
+      className={`${className} gap-1.5`}
+    >
       <BagIcon />
       <span aria-hidden="true">({count})</span>
-    </button>
+    </a>
   );
 }
 

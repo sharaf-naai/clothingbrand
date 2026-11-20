@@ -11,11 +11,12 @@ const label = "text-[11px] uppercase tracking-[.16em] text-grey";
 const checkoutCls = "mt-5 flex min-h-12 w-full items-center justify-center text-xs uppercase tracking-[.14em]";
 const qtyBtn = "flex size-11 items-center justify-center text-base disabled:text-stone";
 
-function Line({ line: l }: { line: CartLine }) {
+/** One bag line (drawer and /cart). `large`: bigger image for the page. */
+export function BagLine({ line: l, large = false }: { line: CartLine; large?: boolean }) {
   return (
     <li className="flex gap-4 py-5">
-      <Link href={`/products/${l.slug}?color=${encodeURIComponent(l.color)}&size=${l.size}`} onClick={cart.close} className="relative aspect-[4/5] w-20 shrink-0 bg-stone">
-        {l.image && <Image src={l.image} alt="" fill sizes="80px" className="object-cover" />}
+      <Link href={`/products/${l.slug}?color=${encodeURIComponent(l.color)}&size=${l.size}`} onClick={cart.close} className={`relative aspect-[4/5] shrink-0 bg-stone ${large ? "w-28 sm:w-32" : "w-20"}`}>
+        {l.image && <Image src={l.image} alt="" fill sizes={large ? "128px" : "80px"} className="object-cover" />}
         <span className="sr-only">{l.name}</span>
       </Link>
       <div className="flex min-w-0 flex-1 flex-col">
@@ -123,7 +124,7 @@ export function CartDrawer() {
           <>
             <ul className="flex-1 divide-y divide-stone overflow-y-auto">
               {lines.map((l) => (
-                <Line key={l.variantId} line={l} />
+                <BagLine key={l.variantId} line={l} />
               ))}
             </ul>
             <div className="border-t border-stone py-5">
@@ -142,6 +143,9 @@ export function CartDrawer() {
                   Checkout
                 </Link>
               )}
+              <Link href="/cart" onClick={cart.close} className="mt-2 flex min-h-11 items-center justify-center text-xs uppercase tracking-[.14em] underline decoration-1 underline-offset-[6px]">
+                View bag
+              </Link>
             </div>
           </>
         )}
