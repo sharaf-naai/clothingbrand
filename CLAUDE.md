@@ -7,7 +7,7 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 ## Where we are (update as you go)
 
-_Last updated 2026-11-20 by Sharaf._
+_Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; the backend hasn't started._
 
 **Open PRs: merge in this order** (Base = the branch each PR is stacked on)
 
@@ -30,7 +30,7 @@ _Last updated 2026-11-20 by Sharaf._
 - Merge with **Delete branch** on (`gh pr merge <n> --merge --delete-branch`): GitHub then retargets the next PR to `main` by itself.
 - #6 and #7 also show #3's commit (it was merged into the cart branch) until #3 is in.
 - #7 has placeholder rules to confirm before approving: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only (see §12 in that PR).
-- If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first.
+- If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first. Exception: for the **Next up** blocks, keep the version on `main` (the PRs carry older copies).
 - Zidane: #2, #3, #11 and #12 have notes or questions for you at the end of their descriptions; read them before approving.
 - #11 and #12 also define backend work: random order tokens (the mock packs the order into the token; real ones must be secrets) and the magic-link login (`/api/account/*`, can wrap Auth.js).
 
@@ -41,9 +41,35 @@ _Last updated 2026-11-20 by Sharaf._
 - **Home hero is built** (§8.1): `src/components/shop/hero.tsx` + `site-header.tsx`. Images live in `public/assets/`.
 - `src/proxy.ts` was deleted (it only did locale routing). Create it again for the `/admin` auth guard.
 
-**Next up:**
-- **Zidane:** accept the GitHub invite, clone, `pnpm install`. Then Prisma schema + `db:*` scripts + seed (§6, §11), and `GET /api/drops/current` (the hero uses a hardcoded "Drop 01 · Autumn" until it exists).
-- **Sharaf:** first contract `src/contracts/products.ts` + mocks (needs both approvals; adds Zod), then the listing and product pages.
+**Next up: Zidane** (in this order)
+
+1. **Get set up**
+   - Accept the GitHub invite (still pending), clone, `pnpm install`.
+   - `cp .env.example .env.local` and keep `NEXT_PUBLIC_USE_MOCKS=true` for now. `pnpm dev`, `pnpm test`.
+   - Open the PR previews (links in each PR) to see the storefront running on mocks.
+2. **Review the contract PRs** (both must approve; table above): #2 products, #3 cart validate + errors, #8 drops, #7 checkout, #11 orders, #12 account.
+   - Read `src/contracts/*.ts`: they are the API. Answer the questions at the end of each PR description.
+   - Confirm or change the placeholder rules in #7: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only.
+   - Once approved, the frontend-only PRs in between can be merged by Sharaf.
+3. **Database** (§6, §11): Prisma schema, `db:migrate` / `db:seed` / `db:studio` scripts, Neon or Supabase, `DATABASE_URL` in Vercel (§10, never in the repo).
+   - Seed the ~16 launch products (§6) plus drops 01 "Autumn" (live) and 02 "Winter" (upcoming). Reuse the slugs and variant ids from `src/mocks/products.ts` where you can, so links keep working.
+4. **Read-only endpoints first** (they unlock listings, product page, drops, search, the hero): `GET /api/products`, `GET /api/products/:slug`, `GET /api/drops/current`.
+5. **Bag and orders**: `POST /api/cart/validate`, then `POST /api/checkout` for COD, then `GET /api/orders/:number`.
+   - Order tokens must be random secrets (store a hash). The mock packs the whole order into the token; don't copy that.
+6. **Payments and email**: Stripe test mode for CARD (`success_url` = `/orders/{number}?token={token}&placed=1`) + `POST /api/webhooks/stripe`; order emails with Resend.
+7. **Customer accounts**: magic-link login and `/api/account/*` (`src/contracts/account.ts`; can wrap Auth.js email).
+8. **Admin backend** (§7): `/admin/login` with `test` / `test` as DEMO, `src/proxy.ts` auth guard, the `/api/admin/*` endpoints, nightly reset cron, rate limits. The admin UI isn't built yet; agree each admin contract with Sharaf first.
+
+**How every endpoint should work**
+- `src/app/api/…/route.ts` parses input with the contract (`CheckoutRequest.parse(body)`) and validates output before sending (`Product.parse(result)`). Bad input → `400` with the `ApiError` body from `src/contracts/errors.ts`.
+- When an endpoint is live: mark it ✅ in the §5 table, add a §13 line, and tell Sharaf.
+- The mock switch is global for now (`NEXT_PUBLIC_USE_MOCKS`): it flips off once the endpoints the storefront needs are live. Then also remove the `NEXT_PUBLIC_USE_MOCKS` line from `.github/workflows/ci.yml` (added in #8) and set `NEXT_PUBLIC_SITE_URL` in Vercel.
+- Don't change a contract on your own: open a PR, both approve (§5).
+
+**Next up: Sharaf**
+- Click through every preview (bag drawer, checkout, search overlay, demo sign-in, wishlist) and fix what looks off.
+- Merge the stack as approvals come in (order in the table above).
+- Then: wishlist sync and a discount-code field (both need contracts), and the admin UI once its contracts are agreed.
 
 ---
 
