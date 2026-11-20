@@ -11,8 +11,8 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 | Who | Role | Owns |
 |---|---|---|
-| **[YOUR NAME]** | Frontend | Storefront UI, admin UI, design system, animations, translations |
-| **[PARTNER NAME]** | Backend | Database, API, auth, payments, emails/WhatsApp, admin permissions, seed data, deployment config |
+| **Sharaf** | Frontend | Storefront UI, admin UI, design system, animations, translations |
+| **Zidane** | Backend | Database, API, auth, payments, emails/WhatsApp, admin permissions, seed data, deployment config |
 
 - You can read and suggest changes anywhere, but **only edit outside your area through a PR the owner approves**.
 - **Shared area:** `src/contracts/`, the API shapes. Changing it needs **both** approvals (see §5).
@@ -185,14 +185,14 @@ Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyw
 - **Checks on every PR (GitHub Actions):** `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Vercel posts a preview link.
 - **`.github/CODEOWNERS`:**
   ```
-  /src/app/[locale]/   @[your-github]
-  /src/components/     @[your-github]
-  /messages/           @[your-github]
-  /prisma/             @[partner-github]
-  /src/server/         @[partner-github]
-  /src/app/api/        @[partner-github]
-  /src/contracts/      @[your-github] @[partner-github]
-  /CLAUDE.md           @[your-github] @[partner-github]
+  /src/app/[locale]/   @sharaf-naai
+  /src/components/     @sharaf-naai
+  /messages/           @sharaf-naai
+  /prisma/             @Zidane-Nait-cheikh
+  /src/server/         @Zidane-Nait-cheikh
+  /src/app/api/        @Zidane-Nait-cheikh
+  /src/contracts/      @sharaf-naai @Zidane-Nait-cheikh
+  /CLAUDE.md           @sharaf-naai @Zidane-Nait-cheikh
   ```
 - Pull `main` and rebase your branch at least daily to avoid big conflicts.
 
@@ -235,13 +235,14 @@ pnpm db:studio      # browse the DB
 |---|---|---|
 | 2026-11-20 | Admin lives at `/admin`; public demo login `test` / `test` with a DEMO role and a nightly reset | both |
 | 2026-11-20 | One Next.js repo; frontend talks to backend only through `/api` + `src/contracts` | both |
-| 2026-11-20 | Neutral minimal brand (no cultural references), working name VEYL | [YOUR NAME] |
+| 2026-11-20 | Neutral minimal brand (no cultural references), working name VEYL | Sharaf |
 | — | Chosen hero design: _[H1–H5, to decide]_ | |
 
 ## 13. Changelog (add newest at the top, one line per merged PR that matters)
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | chore | Added .gitattributes (LF) and .github/CODEOWNERS; filled in names | — |
 | 2026-11-20 | docs | Project brief created | — |
 
 ---
