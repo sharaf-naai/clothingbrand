@@ -76,9 +76,10 @@ Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs (hero
    ├─ components/            (frontend) ui/, shop/, admin/
    ├─ contracts/             (SHARED) zod schemas + inferred types, one file per resource
    ├─ lib/api/               (frontend) typed fetch functions that call /api, switch to mocks
+   ├─ i18n/                  (frontend) next-intl routing + request config
    ├─ mocks/                 (frontend) fixtures typed with the contracts
    ├─ server/                (backend) db client, services, auth, payments, notifications
-   └─ middleware.ts          (backend: auth guard for /admin; frontend: next-intl locale) — edit together
+   └─ proxy.ts               (Next 16 name for middleware.ts; backend: auth guard for /admin; frontend: next-intl locale) — edit together
 ```
 
 Rules:
@@ -222,7 +223,7 @@ DEMO_RESET_CRON_SECRET=
 ```
 pnpm dev            # run locally
 pnpm lint / pnpm typecheck / pnpm test / pnpm build
-pnpm db:migrate     # prisma migrate dev (backend)
+pnpm db:migrate     # prisma migrate dev (backend; db:* scripts not added yet)
 pnpm db:seed        # reset demo data (backend)
 pnpm db:studio      # browse the DB
 ```
@@ -242,6 +243,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, next-intl EN/FR/AR, design tokens), CI workflow, .env.example, Vercel setup | — |
 | 2026-11-20 | chore | Added .gitattributes (LF) and .github/CODEOWNERS; filled in names | — |
 | 2026-11-20 | docs | Project brief created | — |
 
