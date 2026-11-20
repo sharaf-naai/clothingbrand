@@ -2,6 +2,7 @@ import Form from "next/form";
 import Link from "next/link";
 import { BagButton } from "./bag-buttons";
 import { HeaderSearch } from "./header-search";
+import { WishlistLink } from "./wishlist-ui";
 
 const nav = [
   { href: "/woman", label: "Woman" },
@@ -38,7 +39,7 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
               <input id="menu-q" name="q" type="search" placeholder="Search" maxLength={100} className="min-h-11 w-full bg-transparent normal-case tracking-normal placeholder:text-grey" />
             </Form>
           </search>
-          {[...nav, { href: "/account", label: "Account" }].map((l) => (
+          {[...nav, { href: "/account", label: "Account" }, { href: "/wishlist", label: "Wishlist" }].map((l) => (
             <Link key={l.href} href={l.href} className={item}>
               {l.label}
             </Link>
@@ -62,6 +63,7 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
         <Link href="/account" className={`${item} hidden sm:inline-flex`}>
           Account
         </Link>
+        <WishlistLink className={`${item} hidden min-w-11 justify-center sm:inline-flex`} />
         <BagButton className={item} />
       </div>
     </header>

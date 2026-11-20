@@ -299,6 +299,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Wishlist: heart on cards + product page, header link with count, `/wishlist` grid; saved in localStorage (`src/lib/wishlist.ts`, tested), not synced to `/api/wishlist` yet; `toSummary()` moved to `src/lib/summary.ts` | — |
 | 2026-11-20 | feat(shop) | Account `/account`: magic-link sign-in (mock: "Open the link (demo)" button), orders list → order page, address book (add / remove, max 5), sign out; server actions in `src/app/(shop)/account/actions.ts` call `src/lib/api/account.ts` (forwards cookies; mock keeps session + addresses in cookies); account contract + tests; shared form fields in `form-field.tsx` | — |
 | 2026-11-20 | feat(shop) | Order page `/orders/[number]?token=` (progress steps, items, totals, delivery; `&placed=1` empties the bag); checkout now returns `token` and sends COD + Stripe success to it; orders contract + mock + test | — |
 | 2026-11-20 | feat(shop) | Site footer on every page (shop + "you" links, concept-store note) and a 404 page (`src/app/not-found.tsx`) | — |
