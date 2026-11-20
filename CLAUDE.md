@@ -5,6 +5,21 @@
 
 This file is the single source of truth for both of us and for Claude Code. **Every PR that changes something described here updates this file in the same PR.**
 
+## Where we are (update as you go)
+
+_Last updated 2026-11-20 by Sharaf._
+
+**Changed today (read this, Zidane):**
+- **English only.** FR/AR and next-intl are gone. No `[locale]` in routes (pages live in `src/app/`), no `messages/`, and API text fields are plain strings, not `{ en, fr, ar }`.
+- **`main` takes direct pushes** from both of us (no required PR, review or CI). Force pushes and deleting `main` are still blocked. CI still runs on every push, so check it went green.
+- **Vercel is live:** production https://clothingbrand-two.vercel.app (deploys from `main`); every PR gets a preview link. Framework Preset is set to **Next.js** in the Vercel settings (it was "Other" and broke the first deploy). Deployment Protection is off, so previews open without a Vercel login. Env vars set so far: `NEXT_PUBLIC_USE_MOCKS=true`.
+- **Home hero is built** (§8.1): `src/components/shop/hero.tsx` + `site-header.tsx`. Images live in `public/assets/`.
+- `src/proxy.ts` was deleted (it only did locale routing). Create it again for the `/admin` auth guard.
+
+**Next up:**
+- **Zidane:** accept the GitHub invite, clone, `pnpm install`. Then Prisma schema + `db:*` scripts + seed (§6, §11), and `GET /api/drops/current` (the hero uses a hardcoded "Drop 01 · Autumn" until it exists).
+- **Sharaf:** first contract `src/contracts/products.ts` + mocks (needs both approvals; adds Zod), then the listing and product pages.
+
 ---
 
 ## 1. The team and who owns what
@@ -49,7 +64,7 @@ Design reference canvas: https://claude.ai/artifact/2BGGk4J4b2ZQZ6bkkwQocs. The 
 - **Auth.js** (credentials) for admin; customer accounts by email magic link.
 - **Zod** for every API input and output (`src/contracts`).
 - **Stripe** test mode for cards. **Resend** for emails. WhatsApp: `wa.me` links first, WhatsApp Cloud API later.
-- Images: **Cloudinary** (or UploadThing). Hosting: **Vercel**, with a preview deployment for every PR.
+- Images: **Cloudinary** (or UploadThing). Hosting: **Vercel** (production https://clothingbrand-two.vercel.app), with a preview deployment for every PR.
 - Package manager: **pnpm**. Node **20+**.
 
 > If the backend later moves to a separate service (Node/Express, Laravel…), the **contracts in `src/contracts` stay the same**; only `API_BASE_URL` changes. The frontend never imports Prisma or server code.
