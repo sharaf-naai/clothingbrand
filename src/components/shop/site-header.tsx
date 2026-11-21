@@ -26,8 +26,9 @@ function BagIcon() {
   );
 }
 
-// Transparent header that sits over the page (CLAUDE.md §8.1).
-export function SiteHeader({ className = "" }: { className?: string }) {
+// Transparent header (CLAUDE.md §8.1). `overlay`: sits over the home hero, whose wordmark is the logo.
+// Otherwise it sits in the page flow and shows a small VEYL link home.
+export function SiteHeader({ className = "", overlay = false }: { className?: string; overlay?: boolean }) {
   // shortcut: bag count is a static 0, wire to the cart once the cart drawer exists
   const bag = (
     <button type="button" aria-label="Bag, 0 items" className={`${item} gap-1.5`}>
@@ -38,8 +39,16 @@ export function SiteHeader({ className = "" }: { className?: string }) {
 
   return (
     <header
-      className={`absolute inset-x-0 top-0 z-[5] flex items-center justify-between px-5 pt-3 text-xs uppercase tracking-[.12em] sm:px-12 sm:pt-4 ${className}`}
+      className={`${overlay ? "absolute inset-x-0 top-0" : "relative"} z-[5] flex items-center justify-between px-5 pt-3 text-xs uppercase tracking-[.12em] sm:px-12 sm:pt-4 ${className}`}
     >
+      {!overlay && (
+        <Link
+          href="/"
+          className="absolute left-1/2 top-3 inline-flex min-h-11 -translate-x-1/2 items-center font-serif text-2xl font-medium normal-case tracking-[-0.02em] sm:top-4"
+        >
+          VEYL
+        </Link>
+      )}
       {/* Mobile: native disclosure, no JS */}
       <details className="relative sm:hidden">
         <summary className={`${item} cursor-pointer list-none [&::-webkit-details-marker]:hidden`}>Menu</summary>

@@ -9,7 +9,7 @@ const drop = { label: "Drop 01 · Autumn", href: "/drops" };
 export function Hero() {
   return (
     <section className="relative h-svh min-h-[560px] overflow-hidden bg-ivory">
-      <SiteHeader className="hero-fade" />
+      <SiteHeader overlay className="hero-fade" />
 
       {/* Wordmark, behind the model */}
       <div className="hero-parallax-slow absolute inset-x-0 top-[72px] z-[1] flex justify-center">
