@@ -44,7 +44,6 @@ _Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; th
 - `src/proxy.ts` was deleted (it only did locale routing). Create it again for the `/admin` auth guard.
 
 **Next up: Zidane** (in this order)
-
 1. **Get set up**
    - Accept the GitHub invite (still pending), clone, `pnpm install`.
    - `cp .env.example .env.local` and keep `NEXT_PUBLIC_USE_MOCKS=true` for now. `pnpm dev`, `pnpm test`.
@@ -61,13 +60,11 @@ _Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; th
 6. **Payments and email**: payments are **simulated** (#15, §12): no Stripe, no webhook. Store CARD / PAYPAL orders as PAID + CONFIRMED and COD as PENDING + NEW; keep only `cardLast4`. Then order emails with Resend.
 7. **Customer accounts**: magic-link login and `/api/account/*` (`src/contracts/account.ts`; can wrap Auth.js email).
 8. **Admin backend** (§7): `/admin/login` with `test` / `test` as DEMO, `src/proxy.ts` auth guard, the `/api/admin/*` endpoints, nightly reset cron, rate limits. The admin UI isn't built yet; agree each admin contract with Sharaf first.
-
 **How every endpoint should work**
 - `src/app/api/…/route.ts` parses input with the contract (`CheckoutRequest.parse(body)`) and validates output before sending (`Product.parse(result)`). Bad input → `400` with the `ApiError` body from `src/contracts/errors.ts`.
 - When an endpoint is live: mark it ✅ in the §5 table, add a §13 line, and tell Sharaf.
 - The mock switch is global for now (`NEXT_PUBLIC_USE_MOCKS`): it flips off once the endpoints the storefront needs are live. Then also remove the `NEXT_PUBLIC_USE_MOCKS` line from `.github/workflows/ci.yml` (added in #8) and set `NEXT_PUBLIC_SITE_URL` in Vercel.
 - Don't change a contract on your own: open a PR, both approve (§5).
-
 **Next up: Sharaf**
 - Click through every preview (bag drawer, checkout, search overlay, demo sign-in, wishlist) and fix what looks off.
 - Merge the stack as approvals come in (order in the table above).
@@ -167,7 +164,8 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 **Conventions:**
 - JSON only. Money as **integer minor units** + currency code: `{ "amount": 4900, "currency": "EUR" }`. Never floats.
 - Dates as ISO 8601 strings (UTC).
-- Lists: `{ items: [...], page, pageSize, total }`. Query: `page`, `pageSize` (max 50), `sort`.
+- Lists: `{ items: [...], page, pageSize, total }`. Query: `page`, `pageSize` (max 50), `sort`. Shared pieces (`Money`, `PageQuery`, `listOf`) are in `src/contracts/common.ts`.
+- Inside `src/contracts` and `src/mocks`, relative imports keep the `.ts` extension (`./common.ts`) so `node --test` can load them without a build step. Tests are `*.test.ts` files next to the code.
 - Errors: HTTP status + `{ "error": { "code": "OUT_OF_STOCK", "message": "…", "fields": { … } } }`. Codes are UPPER_SNAKE and listed in `src/contracts/errors.ts`.
 - Admin endpoints require a session; the DEMO role gets `403 DEMO_FORBIDDEN` on blocked actions (§7).
 
@@ -175,8 +173,8 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 
 | Method | Path | Purpose | Status |
 |---|---|---|---|
-| GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`) | ⬜ |
-| GET | `/api/products/:slug` | product detail + variants + stock | ⬜ |
+| GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`); contract `src/contracts/products.ts` | 🧪 |
+| GET | `/api/products/:slug` | product detail + variants + stock; 404 if not found | 🧪 |
 | GET | `/api/drops/current` | current/next drop | ⬜ |
 | POST | `/api/cart/validate` | re-price cart, check stock | ⬜ |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
@@ -343,6 +341,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |
 | 2026-11-20 | feat(shop) | Home hero H1 · Cover (wordmark, model cut-out, header, motion); hero spec added as §8.1; images in `public/assets/` | — |
 | 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | — |
 | 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | — |
