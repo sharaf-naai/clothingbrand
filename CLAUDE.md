@@ -343,6 +343,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Product page `/products/[slug]`: images, colour + size as links (`?color=`, `?size=`), stock states, `selectVariant()` with tests; Add to bag not wired yet | — |
 | 2026-11-20 | feat(shop) | Drops page `/drops`: big drop number, the drop's pieces, next-drop teaser; drops contract + mock + tests; `formatDate()`; renders per request (`connection()`); CI builds with `NEXT_PUBLIC_USE_MOCKS=true` like Vercel | — |
 | 2026-11-20 | feat(shop) | Woman / Man listing pages (category + sort links, paging, sold-out state), `formatMoney`; header gets an in-flow mode with the logo; `agentRules: false` | — |
 | 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
