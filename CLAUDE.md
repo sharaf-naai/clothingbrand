@@ -7,34 +7,12 @@ This file is the single source of truth for both of us and for Claude Code. **Ev
 
 ## Where we are (update as you go)
 
-_Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; the backend hasn't started._
+_Last updated 2026-11-21 by Sharaf. The whole storefront is on `main` and live, running on mocks; the backend hasn't started._
 
-**Open PRs: merge in this order** (Base = the branch each PR is stacked on)
-
-| # | PR | Who approves | Base |
-|---|---|---|---|
-| 1 | [#2](https://github.com/sharaf-naai/clothingbrand/pull/2) Products contract | **both** (shared `src/contracts`) | `main` |
-| 2 | [#3](https://github.com/sharaf-naai/clothingbrand/pull/3) Cart validate contract + error body | **both** | #2 |
-| 3 | [#4](https://github.com/sharaf-naai/clothingbrand/pull/4) Woman / Man listing pages | Sharaf | #2 |
-| 4 | [#8](https://github.com/sharaf-naai/clothingbrand/pull/8) Drops page + drops contract (+ CI builds with mocks on) | **both** (adds `src/contracts/drops.ts`) | #4 |
-| 5 | [#5](https://github.com/sharaf-naai/clothingbrand/pull/5) Product page | Sharaf | #4 |
-| 6 | [#6](https://github.com/sharaf-naai/clothingbrand/pull/6) Cart drawer + Add to bag + stock re-check | Sharaf | #5 |
-| 7 | [#7](https://github.com/sharaf-naai/clothingbrand/pull/7) Checkout page + checkout contract | **both** (adds `src/contracts/checkout.ts`) | #6 |
-| 8 | [#9](https://github.com/sharaf-naai/clothingbrand/pull/9) Search page + header search overlay | Sharaf | #7 |
-| 9 | [#10](https://github.com/sharaf-naai/clothingbrand/pull/10) Site footer + 404 page | Sharaf | #9 |
-| 10 | [#11](https://github.com/sharaf-naai/clothingbrand/pull/11) Order confirmation page + orders contract (checkout returns a `token`) | **both** (adds `src/contracts/orders.ts`, changes `checkout.ts`) | #10 |
-| 11 | [#12](https://github.com/sharaf-naai/clothingbrand/pull/12) Customer account (magic link, orders, addresses) + account contract | **both** (adds `src/contracts/account.ts`) | #11 |
-| 12 | [#13](https://github.com/sharaf-naai/clothingbrand/pull/13) Wishlist (local, not synced yet) | Sharaf | #12 |
-| 13 | [#14](https://github.com/sharaf-naai/clothingbrand/pull/14) Full cart page `/cart` | Sharaf | #13 |
-| 14 | [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) Simulated payments: card (demo form), PayPal (simulated), cash on delivery | **both** (changes `checkout.ts`, `orders.ts`) | #14 |
-
-- #8 and #5 both sit on #4 (separate branches). After #4 merges, both retarget to `main`; merge #8 first because it also fixes CI (`NEXT_PUBLIC_USE_MOCKS=true` in `ci.yml`; remove that line once the real API is live).
-- Merge with **Delete branch** on (`gh pr merge <n> --merge --delete-branch`): GitHub then retargets the next PR to `main` by itself.
-- #6 and #7 also show #3's commit (it was merged into the cart branch) until #3 is in.
-- #7 has placeholder rules to confirm before approving: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only (see §12 in that PR).
-- If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first. Exception: for the **Next up** blocks, keep the version on `main` (the PRs carry older copies).
-- Zidane: #2, #3, #11, #12 and #15 have notes or questions for you at the end of their descriptions; read them before approving.
-- #11 and #12 also define backend work: random order tokens (the mock packs the order into the token; real ones must be secrets) and the magic-link login (`/api/account/*`, can wrap Auth.js).
+**Merged on 2026-11-21** (all 14 PRs, [#2](https://github.com/sharaf-naai/clothingbrand/pull/2)–[#15](https://github.com/sharaf-naai/clothingbrand/pull/15)): the storefront is live at https://clothingbrand-two.vercel.app.
+- Pages: home, Woman / Man, product, drops, search (page + header overlay), bag (drawer + `/cart`), checkout (simulated card / PayPal / cash on delivery), order page, account, wishlist, 404, footer.
+- Contracts in `src/contracts`: products, cart, errors, drops, checkout, orders, account. **They were merged without Zidane's review**, so treat them as proposals: change anything by PR (both approve, §5).
+- Still to confirm (§12): shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only.
 
 **Changed today (read this, Zidane):**
 - **English only.** FR/AR and next-intl are gone. No `[locale]` in routes (pages live in `src/app/`), no `messages/`, and API text fields are plain strings, not `{ en, fr, ar }`.
@@ -47,11 +25,10 @@ _Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; th
 1. **Get set up**
    - Accept the GitHub invite (still pending), clone, `pnpm install`.
    - `cp .env.example .env.local` and keep `NEXT_PUBLIC_USE_MOCKS=true` for now. `pnpm dev`, `pnpm test`.
-   - Open the PR previews (links in each PR) to see the storefront running on mocks.
-2. **Review the contract PRs** (both must approve; table above): #2 products, #3 cart validate + errors, #8 drops, #7 checkout, #11 orders, #12 account.
-   - Read `src/contracts/*.ts`: they are the API. Answer the questions at the end of each PR description.
-   - Confirm or change the placeholder rules in #7: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only.
-   - Once approved, the frontend-only PRs in between can be merged by Sharaf.
+   - Open https://clothingbrand-two.vercel.app to see the storefront running on mocks.
+2. **Review the contracts** (already merged, see above): read `src/contracts/*.ts`, they are the API.
+   - The PR descriptions of [#2](https://github.com/sharaf-naai/clothingbrand/pull/2), [#3](https://github.com/sharaf-naai/clothingbrand/pull/3), [#11](https://github.com/sharaf-naai/clothingbrand/pull/11), [#12](https://github.com/sharaf-naai/clothingbrand/pull/12) and [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) end with questions and backend notes for you.
+   - Want something different? Open a PR that changes the contract (and its mock); both approve.
 3. **Database** (§6, §11): Prisma schema, `db:migrate` / `db:seed` / `db:studio` scripts, Neon or Supabase, `DATABASE_URL` in Vercel (§10, never in the repo).
    - Seed the ~16 launch products (§6) plus drops 01 "Autumn" (live) and 02 "Winter" (upcoming). Reuse the slugs and variant ids from `src/mocks/products.ts` where you can, so links keep working.
 4. **Read-only endpoints first** (they unlock listings, product page, drops, search, the hero): `GET /api/products`, `GET /api/products/:slug`, `GET /api/drops/current`.
@@ -60,14 +37,16 @@ _Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; th
 6. **Payments and email**: payments are **simulated** (#15, §12): no Stripe, no webhook. Store CARD / PAYPAL orders as PAID + CONFIRMED and COD as PENDING + NEW; keep only `cardLast4`. Then order emails with Resend.
 7. **Customer accounts**: magic-link login and `/api/account/*` (`src/contracts/account.ts`; can wrap Auth.js email).
 8. **Admin backend** (§7): `/admin/login` with `test` / `test` as DEMO, `src/proxy.ts` auth guard, the `/api/admin/*` endpoints, nightly reset cron, rate limits. The admin UI isn't built yet; agree each admin contract with Sharaf first.
+
 **How every endpoint should work**
 - `src/app/api/…/route.ts` parses input with the contract (`CheckoutRequest.parse(body)`) and validates output before sending (`Product.parse(result)`). Bad input → `400` with the `ApiError` body from `src/contracts/errors.ts`.
 - When an endpoint is live: mark it ✅ in the §5 table, add a §13 line, and tell Sharaf.
 - The mock switch is global for now (`NEXT_PUBLIC_USE_MOCKS`): it flips off once the endpoints the storefront needs are live. Then also remove the `NEXT_PUBLIC_USE_MOCKS` line from `.github/workflows/ci.yml` (added in #8) and set `NEXT_PUBLIC_SITE_URL` in Vercel.
 - Don't change a contract on your own: open a PR, both approve (§5).
+
 **Next up: Sharaf**
-- Click through every preview (bag drawer, checkout, search overlay, demo sign-in, wishlist) and fix what looks off.
-- Merge the stack as approvals come in (order in the table above).
+- Click through the live site (bag drawer, checkout, search overlay, demo sign-in, wishlist) and fix what looks off.
+- Product photos: generate them with `docs/photo-prompts.md` and drop them in the repo root.
 - Then: wishlist sync and a discount-code field (both need contracts), and the admin UI once its contracts are agreed.
 
 ---
@@ -351,26 +330,25 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
-| 2026-11-20 | feat(shop) | Simulated payments: card (demo form, `checkDemoCard()` tested, only `last4` sent), PayPal (simulated approval dialog), cash on delivery; checkout + orders contracts: `PaymentMethod` COD / CARD / PAYPAL, `card.last4`, `cardLast4`, no `checkoutUrl` | — |
-| 2026-11-20 | feat(shop) | Cart page `/cart`: full bag (same lines as the drawer, larger), summary with shipping and "add €X for free shipping", checkout; drawer gets "View bag"; header bag is a link to /cart that opens the drawer with JS | — |
-| 2026-11-20 | feat(shop) | Wishlist: heart on cards + product page, header link with count, `/wishlist` grid; saved in localStorage (`src/lib/wishlist.ts`, tested), not synced to `/api/wishlist` yet; `toSummary()` moved to `src/lib/summary.ts` | — |
-| 2026-11-20 | feat(shop) | Account `/account`: magic-link sign-in (mock: "Open the link (demo)" button), orders list → order page, address book (add / remove, max 5), sign out; server actions in `src/app/(shop)/account/actions.ts` call `src/lib/api/account.ts` (forwards cookies; mock keeps session + addresses in cookies); account contract + tests; shared form fields in `form-field.tsx` | — |
-| 2026-11-20 | feat(shop) | Order page `/orders/[number]?token=` (progress steps, items, totals, delivery; `&placed=1` empties the bag); checkout now returns `token` and sends COD + Stripe success to it; orders contract + mock + test | — |
-| 2026-11-20 | feat(shop) | Site footer on every page (shop + "you" links, concept-store note) and a 404 page (`src/app/not-found.tsx`) | — |
-| 2026-11-20 | feat(shop) | Search: `/search?q=` page (results grid, no-results state, first 50 only) + header search overlay (results as you type, Enter → full results) + search field in the mobile menu; forms use `next/form` (work without JS) | — |
-| 2026-11-20 | feat(shop) | Checkout page `/checkout`: guest form (contact, delivery, COD or card), summary with shipping, inline field errors, CART_CHANGED handling, confirmation; checkout contract + mock + tests; `ApiRequestError` in `errors.ts`; `recheckCart()` shared with the drawer | — |
-| 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
-| 2026-11-20 | feat(shop) | Cart drawer (native <dialog>), header bag count, Add to bag wired; bag saved in localStorage (`src/lib/cart.ts`, tested); re-checked with `validateCart()` each time the drawer opens (price changes, lower stock and removed items shown as notices) | — |
-| 2026-11-20 | feat(shop) | Product page `/products/[slug]`: images, colour + size as links (`?color=`, `?size=`), stock states, `selectVariant()` with tests; Add to bag not wired yet | — |
-| 2026-11-20 | feat(shop) | Drops page `/drops`: big drop number, the drop's pieces, next-drop teaser; drops contract + mock + tests; `formatDate()`; renders per request (`connection()`); CI builds with `NEXT_PUBLIC_USE_MOCKS=true` like Vercel | — |
-| 2026-11-20 | feat(shop) | Woman / Man listing pages (category + sort links, paging, sold-out state), `formatMoney`; header gets an in-flow mode with the logo; `agentRules: false` | — |
-| 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
-| 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |
+| 2026-11-20 | feat(shop) | Simulated payments: card (demo form, `checkDemoCard()` tested, only `last4` sent), PayPal (simulated approval dialog), cash on delivery; checkout + orders contracts: `PaymentMethod` COD / CARD / PAYPAL, `card.last4`, `cardLast4`, no `checkoutUrl` | [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) |
+| 2026-11-20 | feat(shop) | Cart page `/cart`: full bag (same lines as the drawer, larger), summary with shipping and "add €X for free shipping", checkout; drawer gets "View bag"; header bag is a link to /cart that opens the drawer with JS | [#14](https://github.com/sharaf-naai/clothingbrand/pull/14) |
+| 2026-11-20 | feat(shop) | Wishlist: heart on cards + product page, header link with count, `/wishlist` grid; saved in localStorage (`src/lib/wishlist.ts`, tested), not synced to `/api/wishlist` yet; `toSummary()` moved to `src/lib/summary.ts` | [#13](https://github.com/sharaf-naai/clothingbrand/pull/13) |
+| 2026-11-20 | feat(shop) | Account `/account`: magic-link sign-in (mock: "Open the link (demo)" button), orders list → order page, address book (add / remove, max 5), sign out; server actions in `src/app/(shop)/account/actions.ts` call `src/lib/api/account.ts` (forwards cookies; mock keeps session + addresses in cookies); account contract + tests; shared form fields in `form-field.tsx` | [#12](https://github.com/sharaf-naai/clothingbrand/pull/12) |
+| 2026-11-20 | feat(shop) | Order page `/orders/[number]?token=` (progress steps, items, totals, delivery; `&placed=1` empties the bag); checkout now returns `token` and sends COD + Stripe success to it; orders contract + mock + test | [#11](https://github.com/sharaf-naai/clothingbrand/pull/11) |
+| 2026-11-20 | feat(shop) | Site footer on every page (shop + "you" links, concept-store note) and a 404 page (`src/app/not-found.tsx`) | [#10](https://github.com/sharaf-naai/clothingbrand/pull/10) |
+| 2026-11-20 | feat(shop) | Search: `/search?q=` page (results grid, no-results state, first 50 only) + header search overlay (results as you type, Enter → full results) + search field in the mobile menu; forms use `next/form` (work without JS) | [#9](https://github.com/sharaf-naai/clothingbrand/pull/9) |
+| 2026-11-20 | feat(shop) | Checkout page `/checkout`: guest form (contact, delivery, COD or card), summary with shipping, inline field errors, CART_CHANGED handling, confirmation; checkout contract + mock + tests; `ApiRequestError` in `errors.ts`; `recheckCart()` shared with the drawer | [#7](https://github.com/sharaf-naai/clothingbrand/pull/7) |
+| 2026-11-20 | feat(shop) | Cart drawer (native <dialog>), header bag count, Add to bag wired; bag saved in localStorage (`src/lib/cart.ts`, tested); re-checked with `validateCart()` each time the drawer opens (price changes, lower stock and removed items shown as notices) | [#6](https://github.com/sharaf-naai/clothingbrand/pull/6) |
+| 2026-11-20 | feat(shop) | Product page `/products/[slug]`: images, colour + size as links (`?color=`, `?size=`), stock states, `selectVariant()` with tests; Add to bag not wired yet | [#5](https://github.com/sharaf-naai/clothingbrand/pull/5) |
+| 2026-11-20 | feat(shop) | Drops page `/drops`: big drop number, the drop's pieces, next-drop teaser; drops contract + mock + tests; `formatDate()`; renders per request (`connection()`); CI builds with `NEXT_PUBLIC_USE_MOCKS=true` like Vercel | [#8](https://github.com/sharaf-naai/clothingbrand/pull/8) |
+| 2026-11-20 | feat(shop) | Woman / Man listing pages (category + sort links, paging, sold-out state), `formatMoney`; header gets an in-flow mode with the logo; `agentRules: false` | [#4](https://github.com/sharaf-naai/clothingbrand/pull/4) |
+| 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | [#3](https://github.com/sharaf-naai/clothingbrand/pull/3) |
+| 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | [#2](https://github.com/sharaf-naai/clothingbrand/pull/2) |
 | 2026-11-20 | feat(shop) | Home hero H1 · Cover (wordmark, model cut-out, header, motion); hero spec added as §8.1; images in `public/assets/` | — |
-| 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | — |
-| 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | — |
-| 2026-11-20 | chore | Vercel project linked to GitHub (preview per PR, `main` = production); `NEXT_PUBLIC_USE_MOCKS=true` set | — |
-| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, design tokens), CI workflow, .env.example; `main` protected (PR + code-owner review + CI) | — |
+| 2026-11-20 | chore | `main` protection relaxed: direct pushes allowed, CI and CODEOWNERS no longer required | direct push |
+| 2026-11-20 | chore | English only: removed next-intl, `messages/`, `src/i18n/`, `src/proxy.ts`; pages moved out of `[locale]` | [#1](https://github.com/sharaf-naai/clothingbrand/pull/1) |
+| 2026-11-20 | chore | Vercel project linked to GitHub (preview per PR, `main` = production); `NEXT_PUBLIC_USE_MOCKS=true` set | [#1](https://github.com/sharaf-naai/clothingbrand/pull/1) |
+| 2026-11-20 | chore | Next.js 16 app at repo root (Tailwind 4, design tokens), CI workflow, .env.example; `main` protected (PR + code-owner review + CI) | [#1](https://github.com/sharaf-naai/clothingbrand/pull/1) |
 | 2026-11-20 | chore | Added .gitattributes (LF) and .github/CODEOWNERS; filled in names | — |
 | 2026-11-20 | docs | Project brief created | — |
 
