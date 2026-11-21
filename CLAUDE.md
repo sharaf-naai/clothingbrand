@@ -175,6 +175,8 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 |---|---|---|---|
 | GET | `/api/products` | list (`section`, `category`, `drop`, `color`, `size`, `sort`, `q`); contract `src/contracts/products.ts` | 🧪 |
 | GET | `/api/products/:slug` | product detail + variants + stock; 404 if not found | 🧪 |
+| GET | `/api/drops/current` | `{ current, next }` drop (live / soonest upcoming); contract `src/contracts/drops.ts` | 🧪 |
+| POST | `/api/cart/validate` | re-price cart, check stock | ⬜ |
 | GET | `/api/drops/current` | current/next drop | ⬜ |
 | POST | `/api/cart/validate` | re-price cart, check stock; contract `src/contracts/cart.ts` | 🧪 |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
@@ -341,6 +343,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Drops page `/drops`: big drop number, the drop's pieces, next-drop teaser; drops contract + mock + tests; `formatDate()`; renders per request (`connection()`); CI builds with `NEXT_PUBLIC_USE_MOCKS=true` like Vercel | — |
 | 2026-11-20 | feat(shop) | Woman / Man listing pages (category + sort links, paging, sold-out state), `formatMoney`; header gets an in-flow mode with the logo; `agentRules: false` | — |
 | 2026-11-20 | feat(contracts) | Cart validate contract (`cart.ts`: per-line status OK / QTY_REDUCED / OUT_OF_STOCK / UNAVAILABLE, `MAX_QTY` 10), `errors.ts` with `ApiError`, mock + tests, `validateCart()` | — |
 | 2026-11-20 | feat(contracts) | Products contract (`common.ts`, `products.ts`), mock catalogue + tests, `src/lib/api` fetchers; added Zod | — |

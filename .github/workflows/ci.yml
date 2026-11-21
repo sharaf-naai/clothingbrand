@@ -6,6 +6,8 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_USE_MOCKS: "true" # same as Vercel until the real API exists
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
