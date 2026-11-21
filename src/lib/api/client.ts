@@ -1,4 +1,6 @@
 // Shared by every src/lib/api/* file: mock switch and JSON helpers for /api.
+import { ApiError, ApiRequestError } from "@/contracts/errors";
+
 export const useMocks = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 
 // The browser uses its own origin; server components need an absolute URL from NEXT_PUBLIC_SITE_URL.
@@ -12,7 +14,7 @@ export async function apiGet(path: string): Promise<unknown> {
   return res.json();
 }
 
-/** POST JSON to /api/<path>. Throws on any non-2xx, with the API error body's message when there is one. */
+/** POST JSON to /api/<path>. Throws ApiRequestError on any non-2xx, with the error code and fields when the body has them. */
 export async function apiPost(path: string, body: unknown): Promise<unknown> {
   const res = await fetch(new URL(`/api${path}`, base()), {
     method: "POST",
@@ -20,6 +22,9 @@ export async function apiPost(path: string, body: unknown): Promise<unknown> {
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(`POST /api${path} failed: ${res.status} ${data?.error?.code ?? ""}`.trim());
+  if (!res.ok) {
+    const err = ApiError.safeParse(data);
+    throw new ApiRequestError(res.status, err.data?.error.code, err.data?.error.fields);
+  }
   return data;
 }

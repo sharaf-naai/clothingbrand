@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { validateCart } from "@/lib/api/cart";
+import { recheckCart } from "@/lib/api/cart";
 import { cart, cartTotals, useCart, type CartLine } from "@/lib/cart";
 import { formatMoney } from "@/lib/format";
 
@@ -73,15 +73,11 @@ export function CartDrawer() {
 
   // Re-price and re-check stock every time the drawer opens.
   useEffect(() => {
-    const items = cart.lines();
-    if (!open || items.length === 0) return;
-    let stale = false;
-    cart.startCheck();
-    validateCart(items.map(({ variantId, qty }) => ({ variantId, qty })))
-      .then((res) => !stale && cart.applyValidation(res))
-      .catch(() => !stale && cart.checkFailed());
+    if (!open) return;
+    let current = true;
+    recheckCart(() => current);
     return () => {
-      stale = true;
+      current = false;
     };
   }, [open]);
 

@@ -107,6 +107,7 @@ export const cart = {
   open: () => set({ open: true }),
   close: () => set({ open: false, checking: false, notices: [] }),
   lines: () => state.lines,
+  clear: () => set({ lines: [], notices: [] }),
   startCheck: () => set({ checking: true, notices: [] }),
   applyValidation: (res: CartValidateResponse) => set({ ...applyValidation(state.lines, res), checking: false }),
   checkFailed: () => set({ checking: false, notices: ["We couldn't check stock just now. Prices are confirmed at checkout."] }),
