@@ -3,46 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
-import { CheckoutRequest, SHIP_TO, SHIPPING, shippingFor } from "@/contracts/checkout";
+import { CheckoutRequest, SHIPPING, shippingFor } from "@/contracts/checkout";
 import { ApiRequestError } from "@/contracts/errors";
 import { recheckCart } from "@/lib/api/cart";
 import { placeOrder } from "@/lib/api/checkout";
 import { cartTotals, useCart } from "@/lib/cart";
 import { formatMoney } from "@/lib/format";
+import { CountrySelect, Field, fieldLabel, type Errors } from "./form-field";
 
-const label = "text-[11px] uppercase tracking-[.16em] text-grey";
+const label = fieldLabel;
 const section = "border-t border-stone pt-6";
-const input =
-  "mt-1 block min-h-11 w-full border-b border-stone bg-transparent text-sm focus:border-ink aria-[invalid=true]:border-burgundy";
-
-type Errors = Record<string, string>;
-
-function Field(props: { name: string; path: string; label: string; errors: Errors; type?: string; autoComplete: string; optional?: boolean }) {
-  const id = `f-${props.name}`;
-  const err = props.errors[props.path];
-  return (
-    <div>
-      <label htmlFor={id} className={label}>
-        {props.label}
-        {props.optional && " (optional)"}
-      </label>
-      <input
-        id={id}
-        name={props.name}
-        type={props.type ?? "text"}
-        autoComplete={props.autoComplete}
-        aria-invalid={err ? true : undefined}
-        aria-describedby={err ? `${id}-err` : undefined}
-        className={input}
-      />
-      {err && (
-        <p id={`${id}-err`} className="mt-1 text-xs text-burgundy">
-          {err}
-        </p>
-      )}
-    </div>
-  );
-}
 
 const noop = () => () => {};
 
@@ -144,34 +114,7 @@ export function CheckoutForm() {
             <Field name="postalCode" path="address.postalCode" label="Postal code" autoComplete="postal-code" errors={errors} />
             <Field name="city" path="address.city" label="City" autoComplete="address-level2" errors={errors} />
           </div>
-          <div>
-            <label htmlFor="f-country" className={label}>
-              Country
-            </label>
-            <select
-              id="f-country"
-              name="country"
-              autoComplete="country"
-              defaultValue=""
-              aria-invalid={errors["address.country"] ? true : undefined}
-              aria-describedby={errors["address.country"] ? "f-country-err" : undefined}
-              className={input}
-            >
-              <option value="" disabled>
-                Choose a country
-              </option>
-              {Object.entries(SHIP_TO).map(([code, name]) => (
-                <option key={code} value={code}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            {errors["address.country"] && (
-              <p id="f-country-err" className="mt-1 text-xs text-burgundy">
-                {errors["address.country"]}
-              </p>
-            )}
-          </div>
+          <CountrySelect errors={errors} path="address.country" />
         </fieldset>
 
         <fieldset className={`${section} grid gap-2`}>
