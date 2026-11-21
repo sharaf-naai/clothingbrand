@@ -25,13 +25,15 @@ _Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; th
 | 10 | [#11](https://github.com/sharaf-naai/clothingbrand/pull/11) Order confirmation page + orders contract (checkout returns a `token`) | **both** (adds `src/contracts/orders.ts`, changes `checkout.ts`) | #10 |
 | 11 | [#12](https://github.com/sharaf-naai/clothingbrand/pull/12) Customer account (magic link, orders, addresses) + account contract | **both** (adds `src/contracts/account.ts`) | #11 |
 | 12 | [#13](https://github.com/sharaf-naai/clothingbrand/pull/13) Wishlist (local, not synced yet) | Sharaf | #12 |
+| 13 | [#14](https://github.com/sharaf-naai/clothingbrand/pull/14) Full cart page `/cart` | Sharaf | #13 |
+| 14 | [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) Simulated payments: card (demo form), PayPal (simulated), cash on delivery | **both** (changes `checkout.ts`, `orders.ts`) | #14 |
 
 - #8 and #5 both sit on #4 (separate branches). After #4 merges, both retarget to `main`; merge #8 first because it also fixes CI (`NEXT_PUBLIC_USE_MOCKS=true` in `ci.yml`; remove that line once the real API is live).
 - Merge with **Delete branch** on (`gh pr merge <n> --merge --delete-branch`): GitHub then retargets the next PR to `main` by itself.
 - #6 and #7 also show #3's commit (it was merged into the cart branch) until #3 is in.
 - #7 has placeholder rules to confirm before approving: shipping €8 flat / free from €200, delivery to FR, BE, LU, NL, DE, ES, IT, PT, guest checkout only (see §12 in that PR).
 - If a PR shows a `CLAUDE.md` conflict after an earlier merge, it's changelog or status lines: keep both sides, newest first. Exception: for the **Next up** blocks, keep the version on `main` (the PRs carry older copies).
-- Zidane: #2, #3, #11 and #12 have notes or questions for you at the end of their descriptions; read them before approving.
+- Zidane: #2, #3, #11, #12 and #15 have notes or questions for you at the end of their descriptions; read them before approving.
 - #11 and #12 also define backend work: random order tokens (the mock packs the order into the token; real ones must be secrets) and the magic-link login (`/api/account/*`, can wrap Auth.js).
 
 **Changed today (read this, Zidane):**
@@ -56,7 +58,7 @@ _Last updated 2026-11-20 by Sharaf. Storefront is built on mocks in open PRs; th
 4. **Read-only endpoints first** (they unlock listings, product page, drops, search, the hero): `GET /api/products`, `GET /api/products/:slug`, `GET /api/drops/current`.
 5. **Bag and orders**: `POST /api/cart/validate`, then `POST /api/checkout` for COD, then `GET /api/orders/:number`.
    - Order tokens must be random secrets (store a hash). The mock packs the whole order into the token; don't copy that.
-6. **Payments and email**: Stripe test mode for CARD (`success_url` = `/orders/{number}?token={token}&placed=1`) + `POST /api/webhooks/stripe`; order emails with Resend.
+6. **Payments and email**: payments are **simulated** (#15, §12): no Stripe, no webhook. Store CARD / PAYPAL orders as PAID + CONFIRMED and COD as PENDING + NEW; keep only `cardLast4`. Then order emails with Resend.
 7. **Customer accounts**: magic-link login and `/api/account/*` (`src/contracts/account.ts`; can wrap Auth.js email).
 8. **Admin backend** (§7): `/admin/login` with `test` / `test` as DEMO, `src/proxy.ts` auth guard, the `/api/admin/*` endpoints, nightly reset cron, rate limits. The admin UI isn't built yet; agree each admin contract with Sharaf first.
 
