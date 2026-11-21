@@ -24,6 +24,8 @@ export function Field(props: {
   autoComplete: string;
   optional?: boolean;
   id?: string;
+  inputMode?: "numeric" | "text" | "tel" | "email";
+  placeholder?: string;
 }) {
   const id = props.id ?? `f-${props.name}`;
   const err = props.errors[props.path];
@@ -38,6 +40,8 @@ export function Field(props: {
         name={props.name}
         type={props.type ?? "text"}
         autoComplete={props.autoComplete}
+        inputMode={props.inputMode}
+        placeholder={props.placeholder}
         aria-invalid={err ? true : undefined}
         aria-describedby={err ? `${id}-err` : undefined}
         className={fieldInput}

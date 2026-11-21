@@ -21,6 +21,7 @@ export function checkoutMock(req: CheckoutRequest): CheckoutResponse {
     number: orderNumber,
     status: req.paymentMethod === "COD" ? "NEW" : "CONFIRMED",
     paymentMethod: req.paymentMethod,
+    cardLast4: req.card?.last4 ?? null,
     paymentStatus: req.paymentMethod === "COD" ? "PENDING" : "PAID",
     createdAt: new Date().toISOString(),
     customer: { name: req.customer.name, email: req.customer.email },
@@ -39,8 +40,5 @@ export function checkoutMock(req: CheckoutRequest): CheckoutResponse {
     ...totals,
   };
   const token = encodeMockOrderToken(order);
-  // Real CARD orders go to Stripe; the mock skips straight to the success_url Stripe would use.
-  return req.paymentMethod === "COD"
-    ? { paymentMethod: "COD", orderNumber, token, ...totals }
-    : { paymentMethod: "CARD", orderNumber, token, checkoutUrl: `/orders/${orderNumber}?token=${token}&placed=1`, ...totals };
+  return { paymentMethod: req.paymentMethod, orderNumber, token, ...totals };
 }
