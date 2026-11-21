@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BagButton } from "./bag-buttons";
 
 const nav = [
   { href: "/woman", label: "Woman" },
@@ -17,26 +18,9 @@ function SearchIcon() {
   );
 }
 
-function BagIcon() {
-  return (
-    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
-      <path d="M2.5 5.5h11l-1 9h-9z" />
-      <path d="M5.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5" />
-    </svg>
-  );
-}
-
 // Transparent header (CLAUDE.md §8.1). `overlay`: sits over the home hero, whose wordmark is the logo.
 // Otherwise it sits in the page flow and shows a small VEYL link home.
 export function SiteHeader({ className = "", overlay = false }: { className?: string; overlay?: boolean }) {
-  // shortcut: bag count is a static 0, wire to the cart once the cart drawer exists
-  const bag = (
-    <button type="button" aria-label="Bag, 0 items" className={`${item} gap-1.5`}>
-      <BagIcon />
-      <span aria-hidden="true">(0)</span>
-    </button>
-  );
-
   return (
     <header
       className={`${overlay ? "absolute inset-x-0 top-0" : "relative"} z-[5] flex items-center justify-between px-5 pt-3 text-xs uppercase tracking-[.12em] sm:px-12 sm:pt-4 ${className}`}
@@ -79,7 +63,7 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
         <Link href="/account" className={`${item} hidden sm:inline-flex`}>
           Account
         </Link>
-        {bag}
+        <BagButton className={item} />
       </div>
     </header>
   );
