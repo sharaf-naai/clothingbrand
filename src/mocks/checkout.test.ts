@@ -28,7 +28,7 @@ test("CARD order returns a checkout URL; free shipping over €200", () => {
   const r = CheckoutResponse.parse(
     checkoutMock(CheckoutRequest.parse({ ...valid, paymentMethod: "CARD", items: [{ variantId: "vy-coat-m-ivory", qty: 1 }] })),
   );
-  assert.ok(r.paymentMethod === "CARD" && r.checkoutUrl.includes(r.orderNumber));
+  assert.ok(r.paymentMethod === "CARD" && r.checkoutUrl.startsWith(`/orders/${r.orderNumber}?token=`));
   assert.equal(r.shipping.amount, 0);
 });
 
@@ -44,4 +44,17 @@ test("form errors point at the field", () => {
   assert.ok(!r.success);
   const paths = r.error.issues.map((i) => i.path.join("."));
   assert.deepEqual(paths.sort(), ["address.city", "address.country", "customer.email"]);
+});
+
+test("the order behind a checkout can be read back with its token, and only with it", async () => {
+  const { Order } = await import("../contracts/orders.ts");
+  const { getMockOrder } = await import("./orders.ts");
+  const r = checkoutMock(CheckoutRequest.parse({ ...valid, customer: { ...valid.customer, name: "Zoë Ångström" } }));
+  const order = Order.parse(getMockOrder(r.orderNumber, r.token));
+  assert.equal(order.customer.name, "Zoë Ångström");
+  assert.deepEqual(order.items.map((i) => [i.name, i.qty]), [["Canvas Tote", 1]]);
+  assert.equal(order.total.amount, r.total.amount);
+  assert.equal(getMockOrder("VY-999999", r.token), null, "number must match");
+  assert.equal(getMockOrder(r.orderNumber, "mock.garbage"), null);
+  assert.equal(getMockOrder(r.orderNumber, "x".repeat(20)), null);
 });

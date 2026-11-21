@@ -17,6 +17,17 @@ export const shippingFor = (subtotal: number): Money => ({
 
 const required = (what: string) => z.string().trim().min(1, `Enter ${what}`);
 
+/** "VY-000123" */
+export const OrderNumber = z.string().regex(/^VY-\d{6}$/);
+
+export const Address = z.object({
+  line1: required("your address").max(120),
+  line2: z.string().trim().max(120).optional(),
+  city: required("your city").max(60),
+  postalCode: required("your postal code").max(12),
+  country: z.enum(Object.keys(SHIP_TO) as [keyof typeof SHIP_TO, ...(keyof typeof SHIP_TO)[]], "Choose a country"),
+});
+
 export const CheckoutRequest = z.object({
   items: CartValidateRequest.shape.items,
   customer: z.object({
@@ -25,28 +36,30 @@ export const CheckoutRequest = z.object({
     phone: z.string().trim().regex(/^\+?[0-9 ()-]{7,20}$/, "Enter a valid phone number"),
     name: required("your full name").max(100),
   }),
-  address: z.object({
-    line1: required("your address").max(120),
-    line2: z.string().trim().max(120).optional(),
-    city: required("your city").max(60),
-    postalCode: required("your postal code").max(12),
-    country: z.enum(Object.keys(SHIP_TO) as [keyof typeof SHIP_TO, ...(keyof typeof SHIP_TO)[]], "Choose a country"),
-  }),
+  address: Address,
   paymentMethod: z.enum(["COD", "CARD"]),
 });
 
-const Totals = z.object({ subtotal: Money, shipping: Money, total: Money });
+const Created = z.object({
+  orderNumber: OrderNumber,
+  /** Secret for the guest confirmation page /orders/<orderNumber>?token=… (GET /api/orders/:number). Opaque. */
+  token: z.string().min(16),
+  subtotal: Money,
+  shipping: Money,
+  total: Money,
+});
 
 /**
- * 201. COD: the order exists, show the confirmation. CARD: send the browser to `checkoutUrl` (Stripe);
- * Stripe returns to /checkout?order=<orderNumber> after payment.
+ * 201. COD: the order exists, go to /orders/<orderNumber>?token=<token>&placed=1. CARD: send the browser to
+ * `checkoutUrl` (Stripe); Stripe's success_url is that same confirmation URL.
  * Errors: 400 VALIDATION_ERROR (`fields` keyed like "address.city"), 409 CART_CHANGED (prices or stock
  * changed since the bag was checked: call /api/cart/validate again and show the changes).
  */
 export const CheckoutResponse = z.discriminatedUnion("paymentMethod", [
-  Totals.extend({ paymentMethod: z.literal("COD"), orderNumber: z.string().regex(/^VY-\d{6}$/) }),
-  Totals.extend({ paymentMethod: z.literal("CARD"), orderNumber: z.string().regex(/^VY-\d{6}$/), checkoutUrl: z.string() }),
+  Created.extend({ paymentMethod: z.literal("COD") }),
+  Created.extend({ paymentMethod: z.literal("CARD"), checkoutUrl: z.string() }),
 ]);
 
 export type CheckoutRequest = z.infer<typeof CheckoutRequest>;
 export type CheckoutResponse = z.infer<typeof CheckoutResponse>;
+export type Address = z.infer<typeof Address>;

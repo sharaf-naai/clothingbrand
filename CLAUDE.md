@@ -181,7 +181,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 | POST | `/api/cart/validate` | re-price cart, check stock; contract `src/contracts/cart.ts` | 🧪 |
 | POST | `/api/discounts/validate` | check a code | ⬜ |
 | POST | `/api/checkout` | create order (COD) or Stripe session (CARD); contract `src/contracts/checkout.ts`; 409 `CART_CHANGED` if prices/stock moved | 🧪 |
-| GET | `/api/orders/:number` | order confirmation (with token) | ⬜ |
+| GET | `/api/orders/:number` | order confirmation, `?token=` from checkout; wrong number or token → 404; contract `src/contracts/orders.ts` | 🧪 |
 | GET/POST/DELETE | `/api/wishlist` | customer wishlist | ⬜ |
 | POST | `/api/webhooks/stripe` | payment confirmation | ⬜ |
 | GET | `/api/admin/stats` | overview KPIs | ⬜ |
@@ -344,6 +344,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-20 | feat(shop) | Order page `/orders/[number]?token=` (progress steps, items, totals, delivery; `&placed=1` empties the bag); checkout now returns `token` and sends COD + Stripe success to it; orders contract + mock + test | — |
 | 2026-11-20 | feat(shop) | Site footer on every page (shop + "you" links, concept-store note) and a 404 page (`src/app/not-found.tsx`) | — |
 | 2026-11-20 | feat(shop) | Search: `/search?q=` page (results grid, no-results state, first 50 only) + header search overlay (results as you type, Enter → full results) + search field in the mobile menu; forms use `next/form` (work without JS) | — |
 | 2026-11-20 | feat(shop) | Checkout page `/checkout`: guest form (contact, delivery, COD or card), summary with shipping, inline field errors, CART_CHANGED handling, confirmation; checkout contract + mock + tests; `ApiRequestError` in `errors.ts`; `recheckCart()` shared with the drawer | — |

@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
 import { CheckoutRequest, SHIP_TO, SHIPPING, shippingFor } from "@/contracts/checkout";
 import { ApiRequestError } from "@/contracts/errors";
 import { recheckCart } from "@/lib/api/cart";
 import { placeOrder } from "@/lib/api/checkout";
-import { cart, cartTotals, useCart } from "@/lib/cart";
+import { cartTotals, useCart } from "@/lib/cart";
 import { formatMoney } from "@/lib/format";
 
 const label = "text-[11px] uppercase tracking-[.16em] text-grey";
@@ -45,20 +46,19 @@ function Field(props: { name: string; path: string; label: string; errors: Error
 
 const noop = () => () => {};
 
-// Guest checkout. `order` is set when Stripe (or the mock) sends the buyer back after paying.
-export function CheckoutForm({ order }: { order?: string }) {
+// Guest checkout. On success it goes to the order page (/orders/<number>?token=…&placed=1), which empties the bag.
+export function CheckoutForm() {
+  const router = useRouter();
   const mounted = useSyncExternalStore(noop, () => true, () => false); // the bag only exists in the browser
   const { lines, checking, notices } = useCart();
-  const [placed, setPlaced] = useState(order);
   const [payment, setPayment] = useState<"COD" | "CARD">("COD");
   const [errors, setErrors] = useState<Errors>({});
   const [failure, setFailure] = useState<string>();
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (order) cart.clear(); // back from a paid card order
-    else recheckCart();
-  }, [order]);
+    recheckCart();
+  }, []);
 
   const { subtotal } = cartTotals(lines);
   const shipping = shippingFor(subtotal.amount);
@@ -86,13 +86,8 @@ export function CheckoutForm({ order }: { order?: string }) {
     setBusy(true);
     try {
       const res = await placeOrder(parsed.data);
-      if (res.paymentMethod === "CARD") {
-        window.location.assign(res.checkoutUrl); // the bag is cleared when Stripe sends the buyer back
-        return;
-      }
-      cart.clear();
-      setPlaced(res.orderNumber);
-      window.scrollTo(0, 0);
+      if (res.paymentMethod === "CARD") return window.location.assign(res.checkoutUrl); // Stripe, then back to the order page
+      router.push(`/orders/${res.orderNumber}?token=${encodeURIComponent(res.token)}&placed=1`);
     } catch (err) {
       if (err instanceof ApiRequestError && err.code === "CART_CHANGED") {
         await recheckCart();
@@ -105,23 +100,6 @@ export function CheckoutForm({ order }: { order?: string }) {
     } finally {
       setBusy(false);
     }
-  }
-
-  if (placed) {
-    return (
-      <section className="mx-auto max-w-xl px-5 py-24 text-center">
-        <p className={label}>Order {placed}</p>
-        <h1 className="mt-4 font-serif text-5xl">Thank you.</h1>
-        <p className="mt-6 text-sm leading-relaxed">
-          Your order is confirmed. We&apos;ll send you a message when it ships.
-          <br />
-          This is a concept store: nothing will be delivered or charged.
-        </p>
-        <Link href="/" className="mt-8 inline-flex min-h-11 items-center text-xs uppercase tracking-[.14em] underline decoration-1 underline-offset-[6px]">
-          Back to the shop <span aria-hidden="true">&nbsp;→</span>
-        </Link>
-      </section>
-    );
   }
 
   if (!mounted) return <div className="min-h-svh" />;
