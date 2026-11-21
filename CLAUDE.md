@@ -330,6 +330,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-21 | feat(mocks) | Product photos for 9 pieces (trench, wool blazer, fine-knit sweater, wide-leg trousers, tote, cap, belt, beanie, scarf) as WebP in `public/assets/products/<slug>.webp`; men's pieces still to come | — |
 | 2026-11-21 | feat(mocks) | Launch catalogue: 16 mock products (§6), burgundy as the seasonal accent colour; photo prompts for all of them in `docs/photo-prompts.md` | — |
 | 2026-11-20 | feat(shop) | Simulated payments: card (demo form, `checkDemoCard()` tested, only `last4` sent), PayPal (simulated approval dialog), cash on delivery; checkout + orders contracts: `PaymentMethod` COD / CARD / PAYPAL, `card.last4`, `cardLast4`, no `checkoutUrl` | [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) |
 | 2026-11-20 | feat(shop) | Cart page `/cart`: full bag (same lines as the drawer, larger), summary with shipping and "add €X for free shipping", checkout; drawer gets "View bag"; header bag is a link to /cart that opens the drawer with JS | [#14](https://github.com/sharaf-naai/clothingbrand/pull/14) |
