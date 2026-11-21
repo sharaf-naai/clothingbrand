@@ -71,3 +71,25 @@ body {
   .cart-drawer,
   .cart-drawer::backdrop { transition: none; }
 }
+
+/* Search overlay: drops down from the top */
+.search-overlay {
+  translate: 0 -100%;
+  transition: translate 350ms cubic-bezier(0.2, 0.7, 0.2, 1), overlay 350ms allow-discrete, display 350ms allow-discrete;
+}
+.search-overlay[open] {
+  translate: 0 0;
+  @starting-style { translate: 0 -100%; }
+}
+.search-overlay::backdrop {
+  background: rgb(17 17 17 / 0);
+  transition: background 350ms, overlay 350ms allow-discrete, display 350ms allow-discrete;
+}
+.search-overlay[open]::backdrop {
+  background: rgb(17 17 17 / 0.25);
+  @starting-style { background: rgb(17 17 17 / 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .search-overlay,
+  .search-overlay::backdrop { transition: none; }
+}
