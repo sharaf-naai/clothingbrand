@@ -5,7 +5,7 @@ One prompt per mock product (`src/mocks/products.ts`), in the same style as the 
 ## How to deliver
 
 1. Generate each image (e.g. with Astra). Vertical **4:5**, at least **1600 px tall**.
-2. Save it in the repo root, named after the product slug: `trench.png`, `wide-leg-trousers.png`, `boxy-tee.png`, `heavyweight-hoodie.png`, `canvas-tote.png` (`.jpg` / `.webp` are fine too).
+2. Save it in the repo root, named after the product slug (the file name in each heading below, e.g. `trench.png`; `.jpg` / `.webp` are fine too).
 3. Tell Claude Code "product photos are in the root". It converts them to WebP in `public/assets/products/` and adds them to the products.
 
 No cut-out is needed for product photos: the backdrop already matches the page.
@@ -31,7 +31,36 @@ No cut-out is needed for product photos: the backdrop already matches the page.
 ### `canvas-tote.png`: Canvas Tote (Unisex, ivory)
 > Still-life studio photograph of a single heavy natural canvas tote bag in ivory, standing upright on the floor, centred, long handles up and slightly relaxed, soft fabric folds, no print or label. *+ shared style*, except the bag fills about 70% of the height.
 
+### `overshirt.png`: Wool Overshirt (Man, stone)
+> Full-body studio fashion photograph of one man standing straight and centred, facing camera. A heavy brushed-wool overshirt in stone beige with two chest pockets, worn open like a light jacket over an ivory t-shirt, straight navy trousers, minimal white sneakers. *+ shared style*
+
+### `fine-knit-sweater.png`: Fine-Knit Sweater (Woman, grey)
+> Full-body studio fashion photograph of one woman standing in a relaxed pose, facing camera. A fine merino crew-neck sweater in warm grey with a relaxed body and long ribbed cuffs, tucked loosely into stone wide-leg trousers, minimal black loafers. *+ shared style*
+
+### `wool-blazer.png`: Wool Blazer (Woman, black)
+> Full-body studio fashion photograph of one woman standing straight and centred, facing camera. A long, slightly oversized single-breasted black wool blazer, buttoned once, over a fine ivory knit, straight stone trousers, minimal black loafers. *+ shared style*
+
+### `oxford-shirt.png`: Oxford Shirt (Man, ivory)
+> Full-body studio fashion photograph of one man standing straight and centred, facing camera. A washed ivory oxford cotton button-down shirt with a soft collar, sleeves rolled once, untucked over grey pleated trousers, minimal white sneakers. *+ shared style*
+
+### `straight-denim.png`: Straight Denim (Man, navy)
+> Full-body studio fashion photograph of one man standing in a relaxed three-quarter pose, facing camera. Rigid dark navy denim jeans with a mid rise and a straight full-length leg, no visible branding, worn with a tucked-in ivory t-shirt and minimal white sneakers. Focus on the jeans. *+ shared style*
+
+### `pleated-trousers.png`: Pleated Trousers (Man, grey)
+> Full-body studio fashion photograph of one man standing in a relaxed three-quarter pose, facing camera. Double-pleated grey wool trousers with a relaxed thigh and tapered leg, worn with a tucked-in fine black knit and minimal black leather shoes. Focus on the trousers. *+ shared style*
+
+### `cap.png`: Cotton Cap (Unisex, stone)
+> Still-life studio photograph of a single six-panel cap in stone washed cotton twill, three-quarter view, resting on the floor, no logo or label. *+ shared style*, except the cap fills about 50% of the height.
+
+### `leather-belt.png`: Leather Belt (Unisex, black)
+> Still-life studio photograph of a single narrow black leather belt with a plain brushed silver buckle, loosely coiled on the floor, no branding. *+ shared style*, except the belt fills about 50% of the height.
+
+### `beanie.png`: Ribbed Beanie (Unisex, grey)
+> Still-life studio photograph of a single deep-ribbed wool beanie in warm grey with a folded cuff, standing upright on the floor, no label. *+ shared style*, except the beanie fills about 50% of the height.
+
+### `merino-scarf.png`: Merino Scarf (Unisex, burgundy)
+> Still-life studio photograph of a long, light merino scarf in deep burgundy (#6E1E2B), loosely folded and draped on the floor with soft folds, finished edges, no label. *+ shared style*, except the scarf fills about 60% of the height.
+
 ## Later
 
 - One photo per colour (e.g. the coat in stone, the tee in black) when we want the image to follow the colour picker.
-- The ~16-product launch catalogue (CLAUDE.md §6) needs the same treatment once the seed data exists.

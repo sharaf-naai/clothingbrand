@@ -26,7 +26,7 @@ test("sorts by price and defaults to newest", () => {
 
 test("pages with the total of all matches", () => {
   const page2 = list({ page: "2", pageSize: "4" });
-  assert.equal(page2.items.length, mockProducts.length - 4);
+  assert.equal(page2.items.length, Math.min(4, mockProducts.length - 4));
   assert.equal(page2.total, mockProducts.length);
 });
 

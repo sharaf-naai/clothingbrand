@@ -13,7 +13,7 @@ test("current is the live drop, next is the upcoming one", () => {
 
 test("the current drop's products come from the drop filter", () => {
   const { items } = listMockProducts(ProductListQuery.parse({ drop: currentMockDrops().current!.number }));
-  assert.deepEqual(items.map((p) => p.slug).sort(), ["heavyweight-hoodie", "trench", "wool-coat"]);
+  assert.deepEqual(items.map((p) => p.slug).sort(), ["fine-knit-sweater", "heavyweight-hoodie", "overshirt", "trench", "wool-coat"]);
 });
 
 test("drop numbers are two digits", () => {

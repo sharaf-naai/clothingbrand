@@ -330,6 +330,7 @@ pnpm db:studio      # browse the DB
 
 | Date | Area | Change | PR |
 |---|---|---|---|
+| 2026-11-21 | feat(mocks) | Launch catalogue: 16 mock products (§6), burgundy as the seasonal accent colour; photo prompts for all of them in `docs/photo-prompts.md` | — |
 | 2026-11-20 | feat(shop) | Simulated payments: card (demo form, `checkDemoCard()` tested, only `last4` sent), PayPal (simulated approval dialog), cash on delivery; checkout + orders contracts: `PaymentMethod` COD / CARD / PAYPAL, `card.last4`, `cardLast4`, no `checkoutUrl` | [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) |
 | 2026-11-20 | feat(shop) | Cart page `/cart`: full bag (same lines as the drawer, larger), summary with shipping and "add €X for free shipping", checkout; drawer gets "View bag"; header bag is a link to /cart that opens the drawer with JS | [#14](https://github.com/sharaf-naai/clothingbrand/pull/14) |
 | 2026-11-20 | feat(shop) | Wishlist: heart on cards + product page, header link with count, `/wishlist` grid; saved in localStorage (`src/lib/wishlist.ts`, tested), not synced to `/api/wishlist` yet; `toSummary()` moved to `src/lib/summary.ts` | [#13](https://github.com/sharaf-naai/clothingbrand/pull/13) |
