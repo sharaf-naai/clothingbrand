@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProduct } from "@/lib/api/products";
 import { formatMoney } from "@/lib/format";
+import { toSummary } from "@/lib/summary";
 import { selectVariant } from "@/lib/variants";
 import { AddToBagButton } from "./bag-buttons";
+import { WishlistButton } from "./wishlist-ui";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -142,6 +144,7 @@ export async function ProductDetail({ params, searchParams }: Props) {
               : undefined
           }
         />
+        <WishlistButton item={toSummary(p)} text className="mt-2 w-full border border-stone hover:border-ink" />
         {variant && variant.stock > 0 && variant.stock <= 3 && (
           <p className="mt-3 text-xs text-grey">Only {variant.stock} left</p>
         )}

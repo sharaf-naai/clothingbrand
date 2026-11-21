@@ -1,5 +1,6 @@
 // Fake catalogue typed with the products contract. Used while NEXT_PUBLIC_USE_MOCKS=true.
-import type { Color, Product, ProductList, ProductListQuery, ProductSummary, Size } from "../contracts/products.ts";
+import type { Color, Product, ProductList, ProductListQuery, Size } from "../contracts/products.ts";
+import { toSummary } from "../lib/summary.ts";
 
 const C = {
   ivory: { name: "Ivory", hex: "#F4F1EC" },
@@ -114,19 +115,6 @@ export const mockProducts: Product[] = [
   },
 ];
 
-function toSummary(p: Product): ProductSummary {
-  const colors = [...new Map(p.variants.map((v) => [v.color.name, v.color])).values()];
-  return {
-    id: p.id,
-    slug: p.slug,
-    name: p.name,
-    section: p.section,
-    price: p.price,
-    images: p.images,
-    colors,
-    inStock: p.variants.some((v) => v.stock > 0),
-  };
-}
 
 /** Mimics GET /api/products: filters, sorts and pages the mock catalogue. */
 export function listMockProducts(query: ProductListQuery): ProductList {

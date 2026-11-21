@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ProductSummary } from "@/contracts/products";
 import { formatMoney } from "@/lib/format";
+import { WishlistButton } from "./wishlist-ui";
 
 export function ProductCard({ product: p }: { product: ProductSummary }) {
   return (
-    <li>
+    <li className="relative">
       <Link href={`/products/${p.slug}`} className="group block">
         <div className="relative aspect-[4/5] overflow-hidden bg-stone">
           {p.images[0] && (
@@ -32,6 +33,8 @@ export function ProductCard({ product: p }: { product: ProductSummary }) {
           ))}
         </div>
       </Link>
+      {/* Outside the link: a button can't sit inside an <a> */}
+      <WishlistButton item={p} className="absolute right-0 top-0" />
     </li>
   );
 }
