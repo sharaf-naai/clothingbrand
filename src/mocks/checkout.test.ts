@@ -6,7 +6,7 @@ import { checkoutMock } from "./checkout.ts";
 import { getMockOrder } from "./orders.ts";
 
 const valid = {
-  items: [{ variantId: "vy-tote-one-navy", qty: 1 }],
+  items: [{ variantId: "vy-tote-one-ivory", qty: 1 }],
   customer: { email: "test@example.com", phone: "+33 6 12 34 56 78", name: "Test Customer" },
   address: { line1: "1 Rue Exemple", city: "Paris", postalCode: "75001", country: "FR" },
   paymentMethod: "COD",

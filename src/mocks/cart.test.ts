@@ -9,7 +9,7 @@ const validate = (items: object[]) => CartValidateResponse.parse(validateMockCar
 test("prices and totals a buyable bag", () => {
   const r = validate([
     { variantId: "vy-coat-m-ivory", qty: 1 },
-    { variantId: "vy-tote-one-navy", qty: 2 },
+    { variantId: "vy-tote-one-ivory", qty: 2 },
   ]);
   assert.deepEqual(r.items.map((l) => l.status), ["OK", "OK"]);
   assert.equal(r.subtotal.amount, 39000 + 2 * 6000);

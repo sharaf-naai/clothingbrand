@@ -37,6 +37,6 @@ test("one-size products are preselected", () => {
 
 test("fully sold-out product still resolves a colour", () => {
   const s = selectVariant(hoodie);
-  assert.equal(s.color.name, "Grey");
+  assert.equal(s.color.name, "Taupe");
   assert.ok(s.sizes.every((x) => x.stock === 0));
 });
