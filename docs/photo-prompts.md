@@ -28,7 +28,7 @@ No cut-out is needed for product photos: the backdrop already matches the page.
 ### `heavyweight-hoodie.png`: Heavyweight Hoodie (Man, grey)
 > Full-body studio fashion photograph of one man standing straight and centred, facing camera, hood down. A heavyweight loopback cotton hoodie in warm mid-grey (#6B665F) with a double-layer hood and no drawstring hardware or graphics, worn with stone-coloured straight trousers and minimal white sneakers. *+ shared style*
 
-### `canvas-tote.png`: Canvas Tote (Unisex, ivory)
+### `canvas-tote.png`: Canvas Tote (Woman, ivory)
 > Still-life studio photograph of a single heavy natural canvas tote bag in ivory, standing upright on the floor, centred, long handles up and slightly relaxed, soft fabric folds, no print or label. *+ shared style*, except the bag fills about 70% of the height.
 
 ### `overshirt.png`: Wool Overshirt (Man, stone)
@@ -49,17 +49,29 @@ No cut-out is needed for product photos: the backdrop already matches the page.
 ### `pleated-trousers.png`: Pleated Trousers (Man, grey)
 > Full-body studio fashion photograph of one man standing in a relaxed three-quarter pose, facing camera. Double-pleated grey wool trousers with a relaxed thigh and tapered leg, worn with a tucked-in fine black knit and minimal black leather shoes. Focus on the trousers. *+ shared style*
 
-### `cap.png`: Cotton Cap (Unisex, stone)
+### `cap.png`: Cotton Cap (Woman, stone)
 > Still-life studio photograph of a single six-panel cap in stone washed cotton twill, three-quarter view, resting on the floor, no logo or label. *+ shared style*, except the cap fills about 50% of the height.
 
-### `leather-belt.png`: Leather Belt (Unisex, black)
+### `leather-belt.png`: Leather Belt (Woman, black)
 > Still-life studio photograph of a single narrow black leather belt with a plain brushed silver buckle, loosely coiled on the floor, no branding. *+ shared style*, except the belt fills about 50% of the height.
 
-### `beanie.png`: Ribbed Beanie (Unisex, grey)
+### `beanie.png`: Ribbed Beanie (Woman, grey)
 > Still-life studio photograph of a single deep-ribbed wool beanie in warm grey with a folded cuff, standing upright on the floor, no label. *+ shared style*, except the beanie fills about 50% of the height.
 
-### `merino-scarf.png`: Merino Scarf (Unisex, burgundy)
+### `merino-scarf.png`: Merino Scarf (Woman, burgundy)
 > Still-life studio photograph of a long, light merino scarf in deep burgundy (#6E1E2B), loosely folded and draped on the floor with soft folds, finished edges, no label. *+ shared style*, except the scarf fills about 60% of the height.
+
+### `card-holder.png`: Leather Card Holder (Man, black)
+> Still-life studio photograph of a single slim black leather card holder, lying flat at a slight angle on the floor, no logo or stamp. *+ shared style*, except the card holder fills about 35% of the height.
+
+### `canvas-backpack.png`: Canvas Backpack (Man, stone)
+> Still-life studio photograph of a single clean backpack in stone waxed cotton canvas with tan leather straps, standing upright on the floor, front view, no logo or label. *+ shared style*, except the backpack fills about 65% of the height.
+
+### `knit-tie.png`: Knit Tie (Man, navy)
+> Still-life studio photograph of a single navy square-end silk knit tie, loosely laid in a gentle S-curve on the floor, no label. *+ shared style*, except the tie fills about 60% of the height.
+
+### `wool-socks.png`: Ribbed Wool Socks (Man, grey)
+> Still-life studio photograph of one pair of mid-calf ribbed merino socks in warm grey, laid flat side by side on the floor, no label. *+ shared style*, except the socks fill about 55% of the height.
 
 ## Later
 
