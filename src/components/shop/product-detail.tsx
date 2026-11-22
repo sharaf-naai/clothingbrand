@@ -22,7 +22,7 @@ export async function ProductDetail({ params, searchParams }: Props) {
   const p = await getProduct(slug);
   if (!p) notFound();
 
-  const { colors, color, sizes, size, variant } = selectVariant(p, one(sp.color), one(sp.size));
+  const { color, sizes, size, variant } = selectVariant(p, one(sp.color), one(sp.size));
   const href = (c: string, s?: string) => `/products/${p.slug}?color=${encodeURIComponent(c)}${s ? `&size=${s}` : ""}`;
   const soldOut = sizes.every((s) => s.stock === 0);
   const showSizes = !(sizes.length === 1 && sizes[0].size === "ONE");
@@ -65,36 +65,9 @@ export async function ProductDetail({ params, searchParams }: Props) {
         <h1 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.01em]">{p.name}</h1>
         <p className="mt-2 text-sm">{formatMoney(variant?.price ?? p.price)}</p>
 
-        <div className="mt-8">
-          <p id="colour-label" className={label}>
-            Colour · <span className="text-ink">{color.name}</span>
-          </p>
-          <ul aria-labelledby="colour-label" className="mt-2 flex gap-1">
-            {colors.map((c) => {
-              const active = c.name === color.name;
-              return (
-                <li key={c.name}>
-                  <Link
-                    href={href(c.name, size)}
-                    scroll={false}
-                    replace
-                    aria-label={c.name}
-                    aria-current={active ? "true" : undefined}
-                    className="flex size-11 items-center justify-center"
-                  >
-                    <span
-                      className={`size-6 rounded-full border border-grey/40 ${active ? "outline outline-1 outline-offset-[3px] outline-ink" : ""}`}
-                      style={{ background: c.hex }}
-                    />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
+        {/* Colour picker hidden for now: selectVariant() picks the first colour in stock. */}
         {showSizes && (
-          <div className="mt-6">
+          <div className="mt-8">
             <p id="size-label" className={label}>
               Size
             </p>

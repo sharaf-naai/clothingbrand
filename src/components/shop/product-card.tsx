@@ -26,12 +26,6 @@ export function ProductCard({ product: p }: { product: ProductSummary }) {
           <h2 className="font-normal group-hover:underline group-hover:underline-offset-4">{p.name}</h2>
           <span className="shrink-0">{formatMoney(p.price)}</span>
         </div>
-        <p className="sr-only">Colours: {p.colors.map((c) => c.name).join(", ")}</p>
-        <div aria-hidden="true" className="mt-2 flex gap-1.5">
-          {p.colors.map((c) => (
-            <span key={c.name} className="size-2.5 rounded-full border border-grey/40" style={{ background: c.hex }} />
-          ))}
-        </div>
       </Link>
       {/* Outside the link: a button can't sit inside an <a> */}
       <WishlistButton item={p} className="absolute right-0 top-0" />
