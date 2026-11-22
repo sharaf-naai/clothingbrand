@@ -39,7 +39,8 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
               <input id="menu-q" name="q" type="search" placeholder="Search" maxLength={100} className="min-h-11 w-full bg-transparent normal-case tracking-normal placeholder:text-grey" />
             </Form>
           </search>
-          {[...nav, { href: "/account", label: "Account" }, { href: "/wishlist", label: "Wishlist" }].map((l) => (
+          {/* Account link hidden until /api/account/* has a backend; still in the footer. */}
+          {[...nav, { href: "/wishlist", label: "Wishlist" }].map((l) => (
             <Link key={l.href} href={l.href} className={item}>
               {l.label}
             </Link>
@@ -60,9 +61,6 @@ export function SiteHeader({ className = "", overlay = false }: { className?: st
 
       <div className="flex items-center gap-6">
         <HeaderSearch className={`${item} hidden min-w-11 justify-center sm:inline-flex`} />
-        <Link href="/account" className={`${item} hidden sm:inline-flex`}>
-          Account
-        </Link>
         <WishlistLink className={`${item} hidden min-w-11 justify-center sm:inline-flex`} />
         <BagButton className={item} />
       </div>

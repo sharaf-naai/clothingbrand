@@ -234,7 +234,7 @@ Canvas artboard **"H1 · Cover"** (the first artboard, `Main`). A fashion-magazi
 - **Model cut-out:** a transparent PNG/WebP centered horizontally, standing in front of the letters (z-index 2). Its head overlaps the top of the wordmark, and its feet touch the bottom edge of the hero. About 400×750px on desktop.
 - **Header** (z-index 5, transparent, 48px side margins):
   - left: `Woman · Man · Drops`
-  - right: search icon, `Account`, bag icon + `(0)`
+  - right: search icon, wishlist, bag icon + `(0)` (`Account` is hidden until the account backend exists; it is in the footer)
   - Geist 12px, uppercase, letter-spacing .12em, ink; every item is a 44px tap target.
 - **Bottom left:** a label "Drop 01 · Autumn" (Geist 11px, uppercase, letter-spacing .16em, grey `#6B665F`). Under it, *"Quiet pieces, made to stay."* in Bodoni Moda italic 30px, on two lines.
 - **Bottom right:** the CTA **"Shop the drop →"**, a text link: Geist 13px, uppercase, letter-spacing .14em, with a 1px ink underline. It links to the current drop (`GET /api/drops/current`).
@@ -331,6 +331,7 @@ pnpm db:studio      # browse the DB
 | Date | Area | Change | PR |
 |---|---|---|---|
 | 2026-11-21 | feat(mocks) | Product photos for 9 pieces (trench, wool blazer, fine-knit sweater, wide-leg trousers, tote, cap, belt, beanie, scarf) as WebP in `public/assets/products/<slug>.webp`; men's pieces still to come | — |
+| 2026-11-22 | feat(shop) | Account link hidden from the header (desktop + mobile menu) until `/api/account/*` has a backend; still in the footer | — |
 | 2026-11-22 | feat(mocks) | Photos for all 10 men's pieces; every product now has one colour matching its photo (new: white, light grey, camel, taupe, cognac, brown; grey and burgundy dropped) | — |
 | 2026-11-22 | feat(mocks) | Man gets its own accessories (card holder, canvas backpack, knit tie, wool socks; no photos yet, prompts in `docs/photo-prompts.md`); the 5 former UNISEX accessories are now WOMAN; colour pickers hidden on product page and cards; higher-quality photos for 8 women's pieces | — |
 | 2026-11-21 | feat(mocks) | Launch catalogue: 16 mock products (§6), burgundy as the seasonal accent colour; photo prompts for all of them in `docs/photo-prompts.md` | — |
