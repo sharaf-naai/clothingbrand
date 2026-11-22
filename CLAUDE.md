@@ -195,7 +195,7 @@ All request and response shapes live in **`src/contracts/*.ts`** as Zod schemas;
 - **StockMovement**: variantId, delta, reason `SALE | RESTOCK | ADJUSTMENT | RETURN`, by, at.
 - **AdminUser**: id, username, passwordHash, role `OWNER | STAFF | DEMO`.
 
-Launch catalogue (seed): about 16 products: wool coat, trench, overshirt, heavyweight hoodie, boxy tee, oxford shirt, fine-knit sweater, wide-leg trousers, straight denim, pleated trousers, cap, canvas tote, leather belt, beanie (+2). Colours: ivory, stone, grey, black, navy, plus one seasonal accent.
+Launch catalogue (seed): 20 products. Woman: wool coat, trench, wide-leg trousers, fine-knit sweater, wool blazer, plus accessories cap, canvas tote, leather belt, beanie, merino scarf. Man: overshirt, heavyweight hoodie, boxy tee, oxford shirt, straight denim, pleated trousers, plus accessories card holder, canvas backpack, knit tie, wool socks. No UNISEX products for now (the Man page would repeat the women's accessories, photographed on women). Colours: ivory, stone, grey, black, navy, plus one seasonal accent.
 
 ---
 
@@ -331,6 +331,7 @@ pnpm db:studio      # browse the DB
 | Date | Area | Change | PR |
 |---|---|---|---|
 | 2026-11-21 | feat(mocks) | Product photos for 9 pieces (trench, wool blazer, fine-knit sweater, wide-leg trousers, tote, cap, belt, beanie, scarf) as WebP in `public/assets/products/<slug>.webp`; men's pieces still to come | — |
+| 2026-11-22 | feat(mocks) | Man gets its own accessories (card holder, canvas backpack, knit tie, wool socks; no photos yet, prompts in `docs/photo-prompts.md`); the 5 former UNISEX accessories are now WOMAN; colour pickers hidden on product page and cards; higher-quality photos for 8 women's pieces | — |
 | 2026-11-21 | feat(mocks) | Launch catalogue: 16 mock products (§6), burgundy as the seasonal accent colour; photo prompts for all of them in `docs/photo-prompts.md` | — |
 | 2026-11-20 | feat(shop) | Simulated payments: card (demo form, `checkDemoCard()` tested, only `last4` sent), PayPal (simulated approval dialog), cash on delivery; checkout + orders contracts: `PaymentMethod` COD / CARD / PAYPAL, `card.last4`, `cardLast4`, no `checkoutUrl` | [#15](https://github.com/sharaf-naai/clothingbrand/pull/15) |
 | 2026-11-20 | feat(shop) | Cart page `/cart`: full bag (same lines as the drawer, larger), summary with shipping and "add €X for free shipping", checkout; drawer gets "View bag"; header bag is a link to /cart that opens the drawer with JS | [#14](https://github.com/sharaf-naai/clothingbrand/pull/14) |
