@@ -4,12 +4,16 @@ import { toSummary } from "../lib/summary.ts";
 
 const C = {
   ivory: { name: "Ivory", hex: "#F4F1EC" },
+  white: { name: "White", hex: "#FAFAF7" },
   stone: { name: "Stone", hex: "#D9D3C9" },
-  grey: { name: "Grey", hex: "#6B665F" },
+  lightGrey: { name: "Light Grey", hex: "#CFCBC5" },
+  camel: { name: "Camel", hex: "#C2A580" },
+  taupe: { name: "Taupe", hex: "#8C7B65" },
+  cognac: { name: "Cognac", hex: "#7B3F22" },
+  brown: { name: "Brown", hex: "#4A3226" },
   black: { name: "Black", hex: "#111111" },
   navy: { name: "Navy", hex: "#1F2A44" },
-  burgundy: { name: "Burgundy", hex: "#6E1E2B" }, // the seasonal accent (CLAUDE.md §6, §8)
-} satisfies Record<string, Color>;
+} satisfies Record<string, Color>; // one colour per product, matching its photo (the coat also comes in Stone)
 
 const eur = (amount: number) => ({ amount, currency: "EUR" });
 
@@ -33,7 +37,7 @@ const bottoms = { slug: "bottoms", name: "Bottoms" };
 const accessories = { slug: "accessories", name: "Accessories" };
 const drop01 = { number: "01", name: "Autumn" };
 
-// The launch catalogue (CLAUDE.md §6). shortcut: products without a photo yet have images: [] (see docs/photo-prompts.md)
+// The launch catalogue (CLAUDE.md §6). Photos: public/assets/products/<slug>.webp.
 export const mockProducts: Product[] = [
   {
     id: "p_wool_coat",
@@ -71,7 +75,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(15000),
     images: ["/assets/products/wide-leg-trousers.webp"],
-    variants: variants("VY-WIDE", ["XS", "S", "M", "L"], [C.stone, C.black], 15000),
+    variants: variants("VY-WIDE", ["XS", "S", "M", "L"], [C.brown], 15000),
     createdAt: "2026-10-20T09:00:00Z",
   },
   {
@@ -83,8 +87,8 @@ export const mockProducts: Product[] = [
     category: tops,
     drop: null,
     price: eur(4500),
-    images: [],
-    variants: variants("VY-TEE", ["S", "M", "L", "XL"], [C.ivory, C.black, C.grey], 4500),
+    images: ["/assets/products/boxy-tee.webp"],
+    variants: variants("VY-TEE", ["S", "M", "L", "XL"], [C.black], 4500),
     createdAt: "2026-10-15T09:00:00Z",
   },
   {
@@ -96,9 +100,9 @@ export const mockProducts: Product[] = [
     category: tops,
     drop: drop01,
     price: eur(12000),
-    images: [],
+    images: ["/assets/products/heavyweight-hoodie.webp"],
     // all sold out, so listings can show an out-of-stock state
-    variants: variants("VY-HOOD", ["M", "L"], [C.grey], 12000, ["M/Grey", "L/Grey"]),
+    variants: variants("VY-HOOD", ["M", "L"], [C.taupe], 12000, ["M/Taupe", "L/Taupe"]),
     createdAt: "2026-11-03T09:00:00Z",
   },
   {
@@ -111,7 +115,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(6000),
     images: ["/assets/products/canvas-tote.webp"],
-    variants: variants("VY-TOTE", ["ONE"], [C.ivory, C.navy], 6000),
+    variants: variants("VY-TOTE", ["ONE"], [C.ivory], 6000),
     createdAt: "2026-10-01T09:00:00Z",
   },
   {
@@ -123,8 +127,8 @@ export const mockProducts: Product[] = [
     category: outerwear,
     drop: drop01,
     price: eur(16000),
-    images: [],
-    variants: variants("VY-OVER", ["S", "M", "L", "XL"], [C.stone, C.navy], 16000, ["XL/Navy"]),
+    images: ["/assets/products/overshirt.webp"],
+    variants: variants("VY-OVER", ["S", "M", "L", "XL"], [C.camel], 16000),
     createdAt: "2026-11-02T10:00:00Z",
   },
   {
@@ -137,7 +141,7 @@ export const mockProducts: Product[] = [
     drop: drop01,
     price: eur(13000),
     images: ["/assets/products/fine-knit-sweater.webp"],
-    variants: variants("VY-KNIT", ["XS", "S", "M", "L"], [C.grey, C.ivory, C.burgundy], 13000, ["M/Burgundy"]),
+    variants: variants("VY-KNIT", ["XS", "S", "M", "L"], [C.brown], 13000, ["M/Brown"]),
     createdAt: "2026-11-01T10:00:00Z",
   },
   {
@@ -150,7 +154,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(29000),
     images: ["/assets/products/wool-blazer.webp"],
-    variants: variants("VY-BLZR", ["XS", "S", "M", "L"], [C.black, C.stone], 29000),
+    variants: variants("VY-BLZR", ["XS", "S", "M", "L"], [C.navy], 29000),
     createdAt: "2026-10-28T09:00:00Z",
   },
   {
@@ -162,8 +166,8 @@ export const mockProducts: Product[] = [
     category: tops,
     drop: null,
     price: eur(9500),
-    images: [],
-    variants: variants("VY-OXF", ["S", "M", "L", "XL"], [C.ivory, C.navy], 9500),
+    images: ["/assets/products/oxford-shirt.webp"],
+    variants: variants("VY-OXF", ["S", "M", "L", "XL"], [C.white], 9500),
     createdAt: "2026-10-25T09:00:00Z",
   },
   {
@@ -175,8 +179,8 @@ export const mockProducts: Product[] = [
     category: bottoms,
     drop: null,
     price: eur(12000),
-    images: [],
-    variants: variants("VY-DNM", ["S", "M", "L", "XL"], [C.navy, C.black], 12000, ["S/Black"]),
+    images: ["/assets/products/straight-denim.webp"],
+    variants: variants("VY-DNM", ["S", "M", "L", "XL"], [C.black], 12000, ["S/Black"]),
     createdAt: "2026-10-22T09:00:00Z",
   },
   {
@@ -188,8 +192,8 @@ export const mockProducts: Product[] = [
     category: bottoms,
     drop: null,
     price: eur(14000),
-    images: [],
-    variants: variants("VY-PLT", ["S", "M", "L", "XL"], [C.grey, C.stone], 14000),
+    images: ["/assets/products/pleated-trousers.webp"],
+    variants: variants("VY-PLT", ["S", "M", "L", "XL"], [C.black], 14000),
     createdAt: "2026-10-18T09:00:00Z",
   },
   {
@@ -202,7 +206,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(3500),
     images: ["/assets/products/cap.webp"],
-    variants: variants("VY-CAP", ["ONE"], [C.stone, C.black, C.navy], 3500),
+    variants: variants("VY-CAP", ["ONE"], [C.stone], 3500),
     createdAt: "2026-10-10T09:00:00Z",
   },
   {
@@ -215,7 +219,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(6500),
     images: ["/assets/products/leather-belt.webp"],
-    variants: variants("VY-BELT", ["S", "M", "L"], [C.black], 6500),
+    variants: variants("VY-BELT", ["S", "M", "L"], [C.cognac], 6500),
     createdAt: "2026-10-05T09:00:00Z",
   },
   {
@@ -228,7 +232,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(4000),
     images: ["/assets/products/beanie.webp"],
-    variants: variants("VY-BEAN", ["ONE"], [C.grey, C.ivory, C.burgundy], 4000),
+    variants: variants("VY-BEAN", ["ONE"], [C.lightGrey], 4000),
     createdAt: "2026-09-28T09:00:00Z",
   },
   {
@@ -241,7 +245,7 @@ export const mockProducts: Product[] = [
     drop: null,
     price: eur(7500),
     images: ["/assets/products/merino-scarf.webp"],
-    variants: variants("VY-SCRF", ["ONE"], [C.burgundy, C.grey], 7500),
+    variants: variants("VY-SCRF", ["ONE"], [C.camel], 7500),
     createdAt: "2026-09-20T09:00:00Z",
   },
   {
@@ -253,8 +257,8 @@ export const mockProducts: Product[] = [
     category: accessories,
     drop: null,
     price: eur(5500),
-    images: [],
-    variants: variants("VY-CARD", ["ONE"], [C.black, C.navy], 5500),
+    images: ["/assets/products/card-holder.webp"],
+    variants: variants("VY-CARD", ["ONE"], [C.black], 5500),
     createdAt: "2026-09-18T09:00:00Z",
   },
   {
@@ -266,8 +270,8 @@ export const mockProducts: Product[] = [
     category: accessories,
     drop: null,
     price: eur(14500),
-    images: [],
-    variants: variants("VY-PACK", ["ONE"], [C.stone, C.black], 14500),
+    images: ["/assets/products/canvas-backpack.webp"],
+    variants: variants("VY-PACK", ["ONE"], [C.brown], 14500),
     createdAt: "2026-09-16T09:00:00Z",
   },
   {
@@ -279,8 +283,8 @@ export const mockProducts: Product[] = [
     category: accessories,
     drop: null,
     price: eur(6000),
-    images: [],
-    variants: variants("VY-TIE", ["ONE"], [C.navy, C.black, C.burgundy], 6000),
+    images: ["/assets/products/knit-tie.webp"],
+    variants: variants("VY-TIE", ["ONE"], [C.navy], 6000),
     createdAt: "2026-09-14T09:00:00Z",
   },
   {
@@ -292,8 +296,8 @@ export const mockProducts: Product[] = [
     category: accessories,
     drop: null,
     price: eur(2500),
-    images: [],
-    variants: variants("VY-SOCK", ["S", "M", "L"], [C.grey, C.navy], 2500),
+    images: ["/assets/products/wool-socks.webp"],
+    variants: variants("VY-SOCK", ["S", "M", "L"], [C.navy], 2500),
     createdAt: "2026-09-12T09:00:00Z",
   },
 ];

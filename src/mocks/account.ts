@@ -9,7 +9,7 @@ export const mockCustomer = (email: string): Customer => ({ email, name: null, p
 /** Two past orders, so the account page has something to show. */
 export function mockAccountOrders(email: string): AccountOrders {
   const coat = getMockProduct("wool-coat")!.variants.find((v) => v.size === "M" && v.color.name === "Stone")!;
-  const tote = getMockProduct("canvas-tote")!.variants.find((v) => v.color.name === "Navy")!;
+  const tote = getMockProduct("canvas-tote")!.variants.find((v) => v.color.name === "Ivory")!;
   const address = { line1: "1 Rue Exemple", city: "Paris", postalCode: "75001", country: "FR" as const };
   const make = (number: string, createdAt: string, status: Order["status"], item: typeof coat, slug: string, name: string, qty: number): Order => {
     const subtotal = item.price.amount * qty;
